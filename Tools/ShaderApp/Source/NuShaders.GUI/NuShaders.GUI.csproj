@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>NuShadersGUI</AssemblyName>
+    <RootNamespace>NuShaders.GUI</RootNamespace>
+    <!-- WPF data binding needs real culture resolution; the global InvariantGlobalization=true breaks it. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NuShaders.Formats\NuShaders.Formats.csproj" />
+    <ProjectReference Include="..\NuShaders.Imaging\NuShaders.Imaging.csproj" />
+  </ItemGroup>
+
+</Project>

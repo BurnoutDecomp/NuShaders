@@ -1,0 +1,52 @@
+{{ParadiseResourceTypeInfobox
+| name = MaterialTechnique
+| id = 0xD
+| category = Generic
+| memdist = Main Memory only
+| imports = [[Shader Technique]]<br />[[Material State]]
+| importedby = [[Material]]
+}}
+
+{{subpage|Development|text=Information on versions of the Material Technique resource type used during development.}}
+
+Material techniques provide shader details for materials.
+
+This type is only used on PlayStation 3 and Xbox 360.
+
+= Structures =
+=== MaterialTechnique ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || [[Shader Technique|ShaderTechnique]]* || mpShaderTechnique ||  || Imported resource
+|-
+| 0x4 || 0x4 || [[Material State|MaterialState]]* || mpMaterialState ||  || Imported resource
+|-
+| 0x8 || 0x2 || uint16_t || mu16StateFlags || State flags || Null in samples<br>At runtime, 2+4 set for animated materials<br>0x10 set if object/global vertex shader constants present in [[Shader Technique]]
+|-
+| 0xA || 0x2 || uint16_t || mu16VertexProgramHash12 ||  || Hash calculated at runtime
+|-
+| 0xC || 0x2 || uint16_t || mu16PixelProgramHash12 ||  || Hash calculated at runtime
+|-
+| 0xE || 0x2 || uint16_t || mu16MaterialHash16 ||  || Hash calculated at runtime
+|-
+| 0x10 || 0x2 || uint16_t || mu16Flags2 ||  || Set at runtime (taken from [[Shader Technique]])
+|-
+| 0x12 || 0x2 ||  ||  || Padding || 
+|-
+| 0x14 || 0x4 || uint32_t || mNameHash ||  || Unknown algorithm and source<br>Does not match Bundle resource name
+|-
+| 0x18 || 0x4 || ShaderConstantHandle* || mpaVertexShaderInternalConstantsHandles ||  || Data pointed to is uninitialized
+|-
+| 0x1C || 0x4 || ShaderConstantHandle* || mpaPixelShaderInternalConstantsHandles ||  || Unused on X360?<br>Data pointed to is uninitialized
+|-
+| 0x20 || 0x1 || int8_t || mi8NumVertexShaderInternalConstants ||  || 
+|-
+| 0x21 || 0x1 || int8_t || mi8NumPixelShaderInternalConstants ||  || 
+|-
+| 0x22 || 0x1 || int8_t || mi8NumInternalSamplers ||  || 
+|-
+| 0x23 || 0x1 || int8_t || mi8NumExternalSamplers ||  || 
+|-
+| 0x24 || 0x4 || int8_t* || mpai8SamplersIndex ||  || Data pointed to is uninitialized
+|}

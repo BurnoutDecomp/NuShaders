@@ -1,0 +1,1388 @@
+{
+  "generated_from": [
+    "Reference/360/Shaders/Breaker/SHADERS/.debug.xml",
+    "Reference/ResourceDB.json"
+  ],
+  "orphans": [
+    {
+      "fx": "Building_Night_Opaque_Singlesided",
+      "id": "ae50cf22",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Building_Night_Opaque_Singlesided",
+      "id": "baafde01",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "CarStudio_DoNotShipWithThisInTheGame",
+      "id": "fb6db842",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "CarStudio_DoNotShipWithThisInTheGame",
+      "id": "f748822e",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "Chevron_Illuminated_Greyscale_Singlesided",
+      "id": "bc7ec597",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Chevron_Illuminated_Greyscale_Singlesided",
+      "id": "01b6b708",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "DriveableSurface_Night_Detailmap_Opaque_Singlesided",
+      "id": "cb4455da",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "DriveableSurface_Night_Detailmap_Opaque_Singlesided",
+      "id": "09acb0b5",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "FlashingNeon_Diffuse_Opaque_Singlesided",
+      "id": "53a88368",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "FlashingNeon_Diffuse_Opaque_Singlesided",
+      "id": "2c5b8ec3",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "Godray_Additive_Doublesided",
+      "id": "45ade07a",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Godray_Additive_Doublesided",
+      "id": "dff4fae8",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "Gold_Illuminated_Reflective_Opaque_Singlesided",
+      "id": "6ecd40d3",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Gold_Illuminated_Reflective_Opaque_Singlesided",
+      "id": "70d58104",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "Grass_Specular_Opaque_Singlesided",
+      "id": "b345e99b",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Grass_Specular_Opaque_Singlesided",
+      "id": "080fc00f",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "Road_Night_Detailmap_Opaque_Singlesided",
+      "id": "96f1de1a",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Road_Night_Detailmap_Opaque_Singlesided",
+      "id": "9295c78e",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "ShoreLine_Diffuse_Greyscale_Singlesided",
+      "id": "ad4e3db3",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "ShoreLine_Diffuse_Greyscale_Singlesided",
+      "id": "3da46321",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "fx": "Vehicle_Greyscale_Headlight_Doublesided",
+      "id": "a1960674",
+      "stage": "ps",
+      "technique": "Default"
+    },
+    {
+      "fx": "Vehicle_Greyscale_Headlight_Doublesided",
+      "id": "38a8ec09",
+      "stage": "vs",
+      "technique": "Default"
+    },
+    {
+      "id": "c7c1494f",
+      "shared_name": "ZOnly1BitDoubleSidedInstanced",
+      "stage": "ps"
+    },
+    {
+      "id": "89c55262",
+      "shared_name": "ZOnly1BitDoubleSidedInstanced",
+      "stage": "vs"
+    },
+    {
+      "id": "7c0ffb3b",
+      "shared_name": "ZOnly1BitSingleSidedInstanced",
+      "stage": "ps"
+    },
+    {
+      "id": "de1629f5",
+      "shared_name": "ZOnly1BitSingleSidedInstanced",
+      "stage": "vs"
+    },
+    {
+      "id": "1f7fb24d",
+      "shared_name": "ZOnlyOpaqueDoubleSidedInstanced",
+      "stage": "ps"
+    },
+    {
+      "id": "67138db5",
+      "shared_name": "ZOnlyOpaqueDoubleSidedInstanced",
+      "stage": "vs"
+    },
+    {
+      "id": "a4b10039",
+      "shared_name": "ZOnlyOpaqueSingleSidedInstanced",
+      "stage": "ps"
+    },
+    {
+      "id": "30c0f622",
+      "shared_name": "ZOnlyOpaqueSingleSidedInstanced",
+      "stage": "vs"
+    }
+  ],
+  "platform": "x360",
+  "schema": 1,
+  "shared": [
+    {
+      "canonical": "BuildingGlass_Transparent_Doublesided",
+      "conflicts": [
+        {
+          "signature": "f3de4b7fddffe0b2",
+          "sources": [
+            "BuildingGlass_Transparent_Doublesided",
+            "Diffuse_1Bit_Doublesided",
+            "Diffuse_1Bit_Doublesided_Instanced",
+            "FlashingNeon_Diffuse_1Bit_Doublesided",
+            "Illuminance_Diffuse_1Bit_Doublesided",
+            "Illuminance_Diffuse_1Bit_Doublesided_Instanced",
+            "Specular_1Bit_Doublesided_Instanced",
+            "Tint_Specular_1Bit_Doublesided"
+          ]
+        },
+        {
+          "signature": "99882989437cb4c7",
+          "sources": [
+            "Specular_1Bit_Doublesided"
+          ]
+        },
+        {
+          "signature": "186504c8499ee161",
+          "sources": [
+            "Specular_1Bit_Doublesided_Parallax"
+          ]
+        }
+      ],
+      "ps": "c4d0e637",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnly1BitDoubleSided",
+      "sources": [
+        "BuildingGlass_Transparent_Doublesided",
+        "Diffuse_1Bit_Doublesided",
+        "Diffuse_1Bit_Doublesided_Instanced",
+        "FlashingNeon_Diffuse_1Bit_Doublesided",
+        "Illuminance_Diffuse_1Bit_Doublesided",
+        "Illuminance_Diffuse_1Bit_Doublesided_Instanced",
+        "Specular_1Bit_Doublesided",
+        "Specular_1Bit_Doublesided_Instanced",
+        "Specular_1Bit_Doublesided_Parallax",
+        "Tint_Specular_1Bit_Doublesided"
+      ],
+      "technique": "ZOnly1BitDoubleSided",
+      "vs": "d718bac3",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Diffuse_1Bit_Singlesided",
+      "ps": "ff68eb33",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnly1BitSingleSided",
+      "sources": [
+        "Diffuse_1Bit_Singlesided",
+        "Diffuse_1Bit_Singlesided_Instanced",
+        "Illuminance_Diffuse_1Bit_Singlesided",
+        "Sign_Diffuse_1Bit_Singlesided",
+        "Specular_1Bit_Singlesided",
+        "Specular_1bit_Singlesided_Instanced"
+      ],
+      "technique": "ZOnly1BitSingleSided",
+      "vs": "d04ec6d7",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Foliage_1Bit_Doublesided",
+      "ps": "a2a0c92b",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnlyFoliage1Bit",
+      "sources": [
+        "Foliage_1Bit_Doublesided"
+      ],
+      "technique": "ZOnlyFoliage1Bit",
+      "vs": "c37f96a3",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Diffuse_Greyscale_Doublesided",
+      "ps": "9a5f0786",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnlyGreyscaleDoubleSided",
+      "sources": [
+        "Diffuse_Greyscale_Doublesided",
+        "Specular_Greyscale_Doublesided"
+      ],
+      "technique": "ZOnlyGreyscaleDoubleSided",
+      "vs": "6b20b638",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Diffuse_Greyscale_Singlesided",
+      "ps": "a1e70a82",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnlyGreyscaleSingleSided",
+      "sources": [
+        "Diffuse_Greyscale_Singlesided",
+        "Specular_Greyscale_Singlesided"
+      ],
+      "technique": "ZOnlyGreyscaleSingleSided",
+      "vs": "6c76ca2c",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Cruciform_1Bit_Doublesided",
+      "ps": "a8b44cb1",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnlyNull",
+      "sources": [
+        "Cruciform_1Bit_Doublesided",
+        "Cruciform_1Bit_Doublesided_Instanced",
+        "Water_Specular_Opaque_Singlesided"
+      ],
+      "technique": "ZOnlyNull",
+      "vs": "d3aff87c",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Cable_GreyScale_Doublesided",
+      "ps": "41c53ac0",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnlyOpaqueDoubleSided",
+      "sources": [
+        "Cable_GreyScale_Doublesided",
+        "Diffuse_Opaque_Doublesided",
+        "Diffuse_Opaque_Doublesided_Instanced",
+        "Specular_Opaque_Doublesided",
+        "Specular_Opaque_Doublesided_Instanced",
+        "Tunnel_Diffuse_Opaque_Doublesided"
+      ],
+      "technique": "ZOnlyOpaqueDoubleSided",
+      "vs": "f444c8a0",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Building_Opaque_Singlesided",
+      "ps": "7a7d37c4",
+      "ps_entry": "PS_Main_ZOnly",
+      "shared_name": "ZOnlyOpaqueSingleSided",
+      "sources": [
+        "Building_Opaque_Singlesided",
+        "Diffuse_Opaque_Singlesided",
+        "Diffuse_Opaque_Singlesided_Instanced",
+        "DriveableSurface_DetailMap_Diffuse_Opaque_Singlesided",
+        "DriveableSurface_Detailmap_Opaque_Singlesided",
+        "Glass_Specular_Transparent_Doublesided",
+        "Illuminance_Diffuse_Opaque_Singlesided",
+        "Illuminance_Diffuse_Opaque_Singlesided_Instanced",
+        "Lightmap_Diffuse_Opaque_Singlesided",
+        "MetalSheen_Opaque_Doublesided",
+        "Road_Detailmap_Opaque_Singlesided",
+        "Sign_Diffuse_Opaque_Singlesided",
+        "Sign_Illuminance_Diffuse_Opaque_Singlesided",
+        "Sign_Lightmap_Diffuse_Opaque_Singlesided",
+        "Sign_Specular_Opaque_Singlesided",
+        "Specular_DetailMap_Opaque_Singlesided",
+        "Specular_Opaque_Singlesided",
+        "Specular_Opaque_Singlesided_Instanced",
+        "Terrain_Diffuse_Opaque_Singlesided",
+        "Terrain_Specular_Opaque_Singlesided",
+        "Tint_Building_Opaque_Singlesided",
+        "Tint_Specular_Opaque_Singlesided",
+        "Tint_Specular_Opaque_Singlesided_Instanced",
+        "Tunnel_Diffuse_Opaque_Singlesided",
+        "Tunnel_DriveableSurface_Detailmap_Opaque_Singlesided",
+        "Tunnel_Lightmapped_1Bit_Doublesided2",
+        "Tunnel_Lightmapped_1Bit_Singlesided2",
+        "Tunnel_Lightmapped_Opaque_Doublesided2",
+        "Tunnel_Lightmapped_Opaque_Singlesided2",
+        "Tunnel_Lightmapped_Reflective_Opaque_Singlesided2",
+        "Tunnel_Lightmapped_Road_Detailmap_Opaque_Singlesided2",
+        "Tunnel_Road_Detailmap_Opaque_Singlesided",
+        "Vehicle_1Bit_MetalFaded_Textured_EnvMapped",
+        "Vehicle_1Bit_Tyre_Textured",
+        "Vehicle_GreyScale_Decal_Textured",
+        "Vehicle_GreyScale_Decal_Textured_UVAnim",
+        "Vehicle_GreyScale_Light_Textured_EnvMapped",
+        "Vehicle_GreyScale_WheelChrome_Textured_Damaged",
+        "Vehicle_GreyScale_WheelChrome_Textured_Illuminance",
+        "Vehicle_Greyscale_Window_Textured",
+        "Vehicle_Livery_Alpha_CarGuts",
+        "Vehicle_Opaque_BodypartsSkin_EnvMapped",
+        "Vehicle_Opaque_CarbonFibre_Textured",
+        "Vehicle_Opaque_Chrome_Damaged",
+        "Vehicle_Opaque_Decal_Textured_EnvMapped",
+        "Vehicle_Opaque_Decal_Textured_EnvMapped_PoliceLights",
+        "Vehicle_Opaque_Metal_Textured",
+        "Vehicle_Opaque_PaintGloss_Textured",
+        "Vehicle_Opaque_PaintGloss_Textured_NormalMapped",
+        "Vehicle_Opaque_PaintGloss_Textured_Traffic",
+        "Vehicle_Opaque_PlasticMatt",
+        "Vehicle_Opaque_PlasticMatt_Textured",
+        "Vehicle_Opaque_SimpleMetal_Textured",
+        "Vehicle_Opaque_WheelChrome_Textured_Illuminance",
+        "VideoWall_Diffuse_Opaque_Singlesided"
+      ],
+      "technique": "ZOnlyOpaqueSingleSided",
+      "vs": "f312b4b4",
+      "vs_entry": "VS_Main_ZOnly"
+    },
+    {
+      "canonical": "Vehicle_1Bit_MetalFaded_Textured_EnvMapped",
+      "ps": "fb1f9bce",
+      "ps_entry": "PS_Main_ZOnlySkinned",
+      "shared_name": "ZOnlyVehicleSkinnedOpaqueSingleSided",
+      "sources": [
+        "Vehicle_1Bit_MetalFaded_Textured_EnvMapped",
+        "Vehicle_GreyScale_Decal_Textured",
+        "Vehicle_GreyScale_Decal_Textured_UVAnim",
+        "Vehicle_GreyScale_Light_Textured_EnvMapped",
+        "Vehicle_Livery_Alpha_CarGuts",
+        "Vehicle_Opaque_BodypartsSkin_EnvMapped",
+        "Vehicle_Opaque_CarbonFibre_Textured",
+        "Vehicle_Opaque_Chrome_Damaged",
+        "Vehicle_Opaque_Decal_Textured_EnvMapped",
+        "Vehicle_Opaque_Decal_Textured_EnvMapped_PoliceLights",
+        "Vehicle_Opaque_Metal_Textured",
+        "Vehicle_Opaque_PaintGloss_Textured",
+        "Vehicle_Opaque_PaintGloss_Textured_NormalMapped",
+        "Vehicle_Opaque_PaintGloss_Textured_Traffic",
+        "Vehicle_Opaque_PlasticMatt",
+        "Vehicle_Opaque_PlasticMatt_Textured",
+        "Vehicle_Opaque_SimpleMetal_Textured"
+      ],
+      "technique": "ZOnlyVehicleSkinnedOpaqueSingleSided",
+      "vs": "13463f06",
+      "vs_entry": "VS_Main_ZOnlySkinned"
+    }
+  ],
+  "targets": [
+    {
+      "fx": "BuildingGlass_Transparent_Doublesided",
+      "ps": "f291468b",
+      "ps_entry": "PS_Main",
+      "shader": "ca5b9135",
+      "technique": "Default",
+      "vs": "15f904c4",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Building_Opaque_Singlesided",
+      "ps": "a0820f91",
+      "ps_entry": "PS_Main",
+      "shader": "65990b57",
+      "technique": "Default",
+      "vs": "e8c9eef7",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Cable_GreyScale_Doublesided",
+      "ps": "cda04d99",
+      "ps_entry": "PS_Main",
+      "shader": "58335f93",
+      "technique": "Default",
+      "vs": "e67f4487",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Cruciform_1Bit_Doublesided",
+      "ps": "8f7b6949",
+      "ps_entry": "PS_Main",
+      "shader": "6b77e737",
+      "technique": "Default",
+      "vs": "60ee4d77",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Cruciform_1Bit_Doublesided_Instanced",
+      "ps": "1a632ee0",
+      "ps_entry": "PS_Main",
+      "shader": "6edfda1f",
+      "technique": "Default",
+      "vs": "cf714e7c",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_1Bit_Doublesided",
+      "ps": "f75d3fa6",
+      "ps_entry": "PS_Main",
+      "shader": "3e99a33c",
+      "technique": "Default",
+      "vs": "502394c8",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_1Bit_Doublesided_Instanced",
+      "ps": "f4c9c0ec",
+      "ps_entry": "PS_Main",
+      "shader": "362575a7",
+      "technique": "Default",
+      "vs": "c629a8b9",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_1Bit_Singlesided",
+      "ps": "5ab47794",
+      "ps_entry": "PS_Main",
+      "shader": "48d8d59f",
+      "technique": "Default",
+      "vs": "98592c00",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_1Bit_Singlesided_Instanced",
+      "ps": "38f05a65",
+      "ps_entry": "PS_Main",
+      "shader": "af19707d",
+      "technique": "Default",
+      "vs": "5281aaa7",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_Greyscale_Doublesided",
+      "ps": "fda0efdf",
+      "ps_entry": "PS_Main",
+      "shader": "d21a7342",
+      "technique": "Default",
+      "vs": "79f0a080",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_Greyscale_Singlesided",
+      "ps": "0c8a60f4",
+      "ps_entry": "PS_Main",
+      "shader": "406b9a36",
+      "technique": "Default",
+      "vs": "d5bd734f",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_Opaque_Doublesided",
+      "ps": "f2a88d63",
+      "ps_entry": "PS_Main",
+      "shader": "b5dbb494",
+      "technique": "Default",
+      "vs": "bb285745",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_Opaque_Doublesided_Instanced",
+      "ps": "26cfdbc0",
+      "ps_entry": "PS_Main",
+      "shader": "5e492b6f",
+      "technique": "Default",
+      "vs": "f423c241",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_Opaque_Singlesided",
+      "ps": "5f41c551",
+      "ps_entry": "PS_Main",
+      "shader": "c39ac237",
+      "technique": "Default",
+      "vs": "7352ef8d",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Diffuse_Opaque_Singlesided_Instanced",
+      "ps": "23c68740",
+      "ps_entry": "PS_Main",
+      "shader": "757bf0f0",
+      "technique": "Default",
+      "vs": "199e483d",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "DriveableSurface_DetailMap_Diffuse_Opaque_Singlesided",
+      "ps": "f59d9209",
+      "ps_entry": "PS_Main",
+      "shader": "819b2eba",
+      "technique": "Default",
+      "vs": "1648ea1c",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "DriveableSurface_Detailmap_Opaque_Singlesided",
+      "ps": "245284a8",
+      "ps_entry": "PS_Main",
+      "shader": "c4a82ebd",
+      "technique": "Default",
+      "vs": "b748b674",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "FlashingNeon_Diffuse_1Bit_Doublesided",
+      "ps": "10aeb540",
+      "ps_entry": "PS_Main",
+      "shader": "fc8d6f86",
+      "technique": "Default",
+      "vs": "19ad200f",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Foliage_1Bit_Doublesided",
+      "ps": "cc3b3312",
+      "ps_entry": "PS_Main",
+      "shader": "562a888a",
+      "technique": "Default",
+      "vs": "9c148551",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Glass_Specular_Transparent_Doublesided",
+      "ps": "5011bcc0",
+      "ps_entry": "PS_Main",
+      "shader": "508aa1b8",
+      "technique": "Default",
+      "vs": "f4551c26",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Illuminance_Diffuse_1Bit_Doublesided",
+      "ps": "429254a7",
+      "ps_entry": "PS_Main",
+      "shader": "1dd3c67c",
+      "technique": "Default",
+      "vs": "27916b35",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Illuminance_Diffuse_1Bit_Doublesided_Instanced",
+      "ps": "57da217d",
+      "ps_entry": "PS_Main",
+      "shader": "a7a5708a",
+      "technique": "Default",
+      "vs": "4182188a",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Illuminance_Diffuse_1Bit_Singlesided",
+      "ps": "484740c2",
+      "ps_entry": "PS_Main",
+      "shader": "df4b75d0",
+      "technique": "Default",
+      "vs": "1a432bf6",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Illuminance_Diffuse_Opaque_Singlesided",
+      "ps": "a3ccac07",
+      "ps_entry": "PS_Main",
+      "shader": "c6351db0",
+      "technique": "Default",
+      "vs": "f1a69625",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Illuminance_Diffuse_Opaque_Singlesided_Instanced",
+      "ps": "2c7d0835",
+      "ps_entry": "PS_Main",
+      "shader": "824173c1",
+      "technique": "Default",
+      "vs": "39fe7601",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Lightmap_Diffuse_Opaque_Singlesided",
+      "ps": "91b8d1e9",
+      "ps_entry": "PS_Main",
+      "shader": "d04fe2b9",
+      "technique": "Default",
+      "vs": "b6262d27",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "MetalSheen_Opaque_Doublesided",
+      "ps": "7feb525b",
+      "ps_entry": "PS_Main",
+      "shader": "1a3bb87f",
+      "technique": "Default",
+      "vs": "93a7ac04",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Road_Detailmap_Opaque_Singlesided",
+      "ps": "e357dcfd",
+      "ps_entry": "PS_Main",
+      "shader": "8ea27b7b",
+      "technique": "Default",
+      "vs": "ac8e1657",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Sign_Diffuse_1Bit_Singlesided",
+      "ps": "0afccc3f",
+      "ps_entry": "PS_Main",
+      "shader": "57c51dc5",
+      "technique": "Default",
+      "vs": "d90d1edb",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Sign_Diffuse_Opaque_Singlesided",
+      "ps": "a1c2e768",
+      "ps_entry": "PS_Main",
+      "shader": "a017a749",
+      "technique": "Default",
+      "vs": "2ca9e4a7",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Sign_Illuminance_Diffuse_Opaque_Singlesided",
+      "ps": "7a392945",
+      "ps_entry": "PS_Main",
+      "shader": "67c2fb46",
+      "technique": "Default",
+      "vs": "69ad431c",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Sign_Lightmap_Diffuse_Opaque_Singlesided",
+      "ps": "d7df5c36",
+      "ps_entry": "PS_Main",
+      "shader": "60fa7ab6",
+      "technique": "Default",
+      "vs": "a00c85ef",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Sign_Specular_Opaque_Singlesided",
+      "ps": "26e9db95",
+      "ps_entry": "PS_Main",
+      "shader": "acf81fba",
+      "technique": "Default",
+      "vs": "ef22413a",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_1Bit_Doublesided",
+      "ps": "a3a50bab",
+      "ps_entry": "PS_Main",
+      "shader": "e3bf57ad",
+      "technique": "Default",
+      "vs": "2ec61041",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_1Bit_Doublesided_Instanced",
+      "ps": "30f87f8b",
+      "ps_entry": "PS_Main",
+      "shader": "b42e256d",
+      "technique": "Default",
+      "vs": "153b6dfd",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_1Bit_Doublesided_Parallax",
+      "missing": [
+        "vs",
+        "ps"
+      ],
+      "ps_entry": "PS_Main",
+      "technique": "Default",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_1Bit_Singlesided",
+      "ps": "51c30df6",
+      "ps_entry": "PS_Main",
+      "shader": "019ea5b8",
+      "technique": "Default",
+      "vs": "3bee5b0e",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_1bit_Singlesided_Instanced",
+      "ps": "1a1641a6",
+      "ps_entry": "PS_Main",
+      "shader": "6aff28fd",
+      "technique": "Default",
+      "vs": "50cedfb6",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_DetailMap_Opaque_Singlesided",
+      "ps": "78bad871",
+      "ps_entry": "PS_Main",
+      "shader": "fc2462a2",
+      "technique": "Default",
+      "vs": "481b3458",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_Greyscale_Doublesided",
+      "ps": "0a962f3b",
+      "ps_entry": "PS_Main",
+      "shader": "08bf1bc7",
+      "technique": "Default",
+      "vs": "de60b021",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_Greyscale_Singlesided",
+      "ps": "00433b5e",
+      "ps_entry": "PS_Main",
+      "shader": "ca27a86b",
+      "technique": "Default",
+      "vs": "e3b2f0e2",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_Opaque_Doublesided",
+      "ps": "873e7e9f",
+      "ps_entry": "PS_Main",
+      "shader": "6292b3ae",
+      "technique": "Default",
+      "vs": "0f567f81",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_Opaque_Doublesided_Instanced",
+      "ps": "c7bf15b7",
+      "ps_entry": "PS_Main",
+      "shader": "963ac379",
+      "technique": "Default",
+      "vs": "3aa35610",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_Opaque_Singlesided",
+      "ps": "ee305edd",
+      "ps_entry": "PS_Main",
+      "shader": "ea70d94b",
+      "technique": "Default",
+      "vs": "97ed511d",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Specular_Opaque_Singlesided_Instanced",
+      "ps": "e937e0cc",
+      "ps_entry": "PS_Main",
+      "shader": "68a4d4d9",
+      "technique": "Default",
+      "vs": "fd5a7651",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Terrain_Diffuse_Opaque_Singlesided",
+      "ps": "124837be",
+      "ps_entry": "PS_Main",
+      "shader": "98ec1271",
+      "technique": "Default",
+      "vs": "43aa1996",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Terrain_Specular_Opaque_Singlesided",
+      "ps": "0e720b18",
+      "ps_entry": "PS_Main",
+      "shader": "67802cb1",
+      "technique": "Default",
+      "vs": "7c032577",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tint_Building_Opaque_Singlesided",
+      "ps": "4684bb48",
+      "ps_entry": "PS_Main",
+      "shader": "d0f2834e",
+      "technique": "Default",
+      "vs": "17208233",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tint_Specular_1Bit_Doublesided",
+      "ps": "f3f28656",
+      "ps_entry": "PS_Main",
+      "shader": "f6263c49",
+      "technique": "Default",
+      "vs": "ed9ac96d",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tint_Specular_Opaque_Singlesided",
+      "ps": "2120c987",
+      "ps_entry": "PS_Main",
+      "shader": "aaf108ad",
+      "technique": "Default",
+      "vs": "1c9cf960",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tint_Specular_Opaque_Singlesided_Instanced",
+      "ps": "44df527a",
+      "ps_entry": "PS_Main",
+      "shader": "37f2df72",
+      "technique": "Default",
+      "vs": "dff5885a",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Diffuse_Opaque_Doublesided",
+      "ps": "4118a3f2",
+      "ps_entry": "PS_Main",
+      "shader": "bd9730f7",
+      "technique": "Default",
+      "vs": "3c9344b9",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Diffuse_Opaque_Singlesided",
+      "ps": "f1e53d7f",
+      "ps_entry": "PS_Main",
+      "shader": "06d33bff",
+      "technique": "Default",
+      "vs": "af2a46ba",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_DriveableSurface_Detailmap_Opaque_Singlesided",
+      "ps": "1a2fe055",
+      "ps_entry": "PS_Main",
+      "shader": "27b8d81b",
+      "technique": "Default",
+      "vs": "747a45b1",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Lightmapped_1Bit_Doublesided2",
+      "ps": "4c2b2d77",
+      "ps_entry": "PS_Main",
+      "shader": "7ba3c93d",
+      "technique": "Default",
+      "vs": "a14c0098",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Lightmapped_1Bit_Singlesided2",
+      "ps": "2f2fe9a0",
+      "ps_entry": "PS_Main",
+      "shader": "21ea2565",
+      "technique": "Default",
+      "vs": "b998432b",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Lightmapped_Opaque_Doublesided2",
+      "ps": "ac51ceff",
+      "ps_entry": "PS_Main",
+      "shader": "abf8fbd2",
+      "technique": "Default",
+      "vs": "42cf7169",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Lightmapped_Opaque_Singlesided2",
+      "ps": "ddd5ad3d",
+      "ps_entry": "PS_Main",
+      "shader": "231e6695",
+      "technique": "Default",
+      "vs": "37d45696",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Lightmapped_Reflective_Opaque_Singlesided2",
+      "ps": "c71b282f",
+      "ps_entry": "PS_Main",
+      "shader": "cf0b28a6",
+      "technique": "Default",
+      "vs": "c477e95b",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Lightmapped_Road_Detailmap_Opaque_Singlesided2",
+      "ps": "e9a93a7a",
+      "ps_entry": "PS_Main",
+      "shader": "b8d690d4",
+      "technique": "Default",
+      "vs": "df58fe32",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Tunnel_Road_Detailmap_Opaque_Singlesided",
+      "ps": "89c8d9a5",
+      "ps_entry": "PS_Main",
+      "shader": "4fbec35d",
+      "technique": "Default",
+      "vs": "c9545094",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Vehicle_1Bit_MetalFaded_Textured_EnvMapped",
+      "ps": "6d32f577",
+      "ps_entry": "DamagedPS",
+      "shader": "008414a2",
+      "technique": "Damaged",
+      "vs": "a16d1940",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_1Bit_MetalFaded_Textured_EnvMapped",
+      "ps": "25a5412f",
+      "ps_entry": "DefaultPS",
+      "shader": "008414a2",
+      "technique": "Default",
+      "vs": "c4955732",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_1Bit_Tyre_Textured",
+      "ps": "22cad312",
+      "ps_entry": "BlurredPS",
+      "shader": "059e402d",
+      "technique": "Blurred",
+      "vs": "9cfa74b1",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_1Bit_Tyre_Textured",
+      "ps": "4d61def9",
+      "ps_entry": "StationaryPS",
+      "shader": "059e402d",
+      "technique": "Default",
+      "vs": "ab4de44c",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_Decal_Textured",
+      "ps": "19fceefe",
+      "ps_entry": "DamagedPS",
+      "shader": "b46927ea",
+      "technique": "Damaged",
+      "vs": "357decdf",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_Decal_Textured",
+      "ps": "516b5aa6",
+      "ps_entry": "DefaultPS",
+      "shader": "b46927ea",
+      "technique": "Default",
+      "vs": "5085a2ad",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_Decal_Textured_UVAnim",
+      "ps": "a794f3b5",
+      "ps_entry": "DamagedPS",
+      "shader": "2fc98051",
+      "technique": "Damaged",
+      "vs": "d4cd1cda",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_Decal_Textured_UVAnim",
+      "ps": "ef0347ed",
+      "ps_entry": "DefaultPS",
+      "shader": "2fc98051",
+      "technique": "Default",
+      "vs": "b13552a8",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_Light_Textured_EnvMapped",
+      "ps": "7a6ad9dd",
+      "ps_entry": "DamagedPS",
+      "shader": "99b3e4c4",
+      "technique": "Damaged",
+      "vs": "97790b9a",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_Light_Textured_EnvMapped",
+      "ps": "32fd6d85",
+      "ps_entry": "DefaultPS",
+      "shader": "99b3e4c4",
+      "technique": "Default",
+      "vs": "f28145e8",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_WheelChrome_Textured_Damaged",
+      "ps": "39ec71f8",
+      "ps_entry": "BlurredPS",
+      "shader": "7a58e3c4",
+      "technique": "Blurred",
+      "vs": "dc3e5975",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_WheelChrome_Textured_Damaged",
+      "ps": "56477c13",
+      "ps_entry": "StationaryPS",
+      "shader": "7a58e3c4",
+      "technique": "Default",
+      "vs": "eb89c988",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_WheelChrome_Textured_Illuminance",
+      "ps": "f88b504a",
+      "ps_entry": "BlurredPS",
+      "shader": "56759898",
+      "technique": "Blurred",
+      "vs": "f990ecf4",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_GreyScale_WheelChrome_Textured_Illuminance",
+      "ps": "97205da1",
+      "ps_entry": "StationaryPS",
+      "shader": "56759898",
+      "technique": "Default",
+      "vs": "ce277c09",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_Greyscale_Window_Textured",
+      "ps": "85ca34d3",
+      "ps_entry": "DamagedPS",
+      "shader": "5ea40b33",
+      "technique": "Damaged",
+      "vs": "703e8670",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Greyscale_Window_Textured",
+      "ps": "cd5d808b",
+      "ps_entry": "DefaultPS",
+      "shader": "5ea40b33",
+      "technique": "Default",
+      "vs": "15c6c802",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Livery_Alpha_CarGuts",
+      "ps": "7ae2a758",
+      "ps_entry": "DamagedPS",
+      "shader": "9e3b8e31",
+      "technique": "Damaged",
+      "vs": "0aabf44b",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Livery_Alpha_CarGuts",
+      "ps": "32751300",
+      "ps_entry": "DefaultPS",
+      "shader": "9e3b8e31",
+      "technique": "Default",
+      "vs": "6f53ba39",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_BodypartsSkin_EnvMapped",
+      "ps": "0d8b7b59",
+      "ps_entry": "DamagedPS",
+      "shader": "082c6d21",
+      "technique": "Damaged",
+      "vs": "7ddbad01",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_BodypartsSkin_EnvMapped",
+      "ps": "451ccf01",
+      "ps_entry": "DefaultPS",
+      "shader": "082c6d21",
+      "technique": "Default",
+      "vs": "1823e373",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_CarbonFibre_Textured",
+      "ps": "5937dc1f",
+      "ps_entry": "DamagedPS",
+      "shader": "11783066",
+      "technique": "Damaged",
+      "vs": "e230f503",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_CarbonFibre_Textured",
+      "ps": "11a06847",
+      "ps_entry": "DefaultPS",
+      "shader": "11783066",
+      "technique": "Default",
+      "vs": "87c8bb71",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Chrome_Damaged",
+      "ps": "852e64e2",
+      "ps_entry": "DamagedPS",
+      "shader": "6b5c23ad",
+      "technique": "Damaged",
+      "vs": "21e0621a",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Chrome_Damaged",
+      "ps": "cdb9d0ba",
+      "ps_entry": "DefaultPS",
+      "shader": "6b5c23ad",
+      "technique": "Default",
+      "vs": "44182c68",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Decal_Textured_EnvMapped",
+      "ps": "358dd6bc",
+      "ps_entry": "DamagedPS",
+      "shader": "197cc4e1",
+      "technique": "Damaged",
+      "vs": "ad83bd5b",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Decal_Textured_EnvMapped",
+      "ps": "7d1a62e4",
+      "ps_entry": "DefaultPS",
+      "shader": "197cc4e1",
+      "technique": "Default",
+      "vs": "c87bf329",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Decal_Textured_EnvMapped_PoliceLights",
+      "ps": "fb938e3c",
+      "ps_entry": "DamagedPS",
+      "shader": "50a91f5d",
+      "technique": "Damaged",
+      "vs": "40f52023",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Decal_Textured_EnvMapped_PoliceLights",
+      "ps": "b3043a64",
+      "ps_entry": "DefaultPS",
+      "shader": "50a91f5d",
+      "technique": "Default",
+      "vs": "250d6e51",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Metal_Textured",
+      "ps": "1d75cbaf",
+      "ps_entry": "DamagedPS",
+      "shader": "d7eda6b4",
+      "technique": "Damaged",
+      "vs": "29150498",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_Metal_Textured",
+      "ps": "55e27ff7",
+      "ps_entry": "DefaultPS",
+      "shader": "d7eda6b4",
+      "technique": "Default",
+      "vs": "4ced4aea",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PaintGloss_Textured",
+      "ps": "9fb09aa7",
+      "ps_entry": "DamagedPS",
+      "shader": "56fca08a",
+      "technique": "Damaged",
+      "vs": "274c49fb",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PaintGloss_Textured",
+      "ps": "d7272eff",
+      "ps_entry": "DefaultPS",
+      "shader": "56fca08a",
+      "technique": "Default",
+      "vs": "42b40789",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PaintGloss_Textured_NormalMapped",
+      "ps": "db3b5b3a",
+      "ps_entry": "DamagedPS",
+      "shader": "8e22de82",
+      "technique": "Damaged",
+      "vs": "a9b62dc3",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PaintGloss_Textured_NormalMapped",
+      "ps": "93acef62",
+      "ps_entry": "DefaultPS",
+      "shader": "8e22de82",
+      "technique": "Default",
+      "vs": "cc4e63b1",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PaintGloss_Textured_Traffic",
+      "ps": "3ad8d442",
+      "ps_entry": "DamagedPS",
+      "shader": "ae6a62db",
+      "technique": "Damaged",
+      "vs": "f7893742",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PaintGloss_Textured_Traffic",
+      "ps": "724f601a",
+      "ps_entry": "DefaultPS",
+      "shader": "ae6a62db",
+      "technique": "Default",
+      "vs": "92717930",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PlasticMatt",
+      "ps": "4a9b1b20",
+      "ps_entry": "DamagedPS",
+      "shader": "015d4d8b",
+      "technique": "Damaged",
+      "vs": "544574f9",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PlasticMatt",
+      "ps": "020caf78",
+      "ps_entry": "DefaultPS",
+      "shader": "015d4d8b",
+      "technique": "Default",
+      "vs": "31bd3a8b",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PlasticMatt_Textured",
+      "ps": "9953111c",
+      "ps_entry": "DamagedPS",
+      "shader": "2c40ce78",
+      "technique": "Damaged",
+      "vs": "7bf9c074",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_PlasticMatt_Textured",
+      "ps": "d1c4a544",
+      "ps_entry": "DefaultPS",
+      "shader": "2c40ce78",
+      "technique": "Default",
+      "vs": "1e018e06",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_SimpleMetal_Textured",
+      "ps": "d8f5a05c",
+      "ps_entry": "DamagedPS",
+      "shader": "512fced2",
+      "technique": "Damaged",
+      "vs": "0d642755",
+      "vs_entry": "DamagedVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_SimpleMetal_Textured",
+      "ps": "90621404",
+      "ps_entry": "DefaultPS",
+      "shader": "512fced2",
+      "technique": "Default",
+      "vs": "689c6927",
+      "vs_entry": "DefaultVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_WheelChrome_Textured_Illuminance",
+      "ps": "be06cfe6",
+      "ps_entry": "BlurredPS",
+      "shader": "762f7d79",
+      "technique": "Blurred",
+      "vs": "26b68ea8",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "Vehicle_Opaque_WheelChrome_Textured_Illuminance",
+      "ps": "d1adc20d",
+      "ps_entry": "StationaryPS",
+      "shader": "762f7d79",
+      "technique": "Default",
+      "vs": "11011e55",
+      "vs_entry": "WheelVS"
+    },
+    {
+      "fx": "VideoWall_Diffuse_Opaque_Singlesided",
+      "ps": "154e45c0",
+      "ps_entry": "PS_Main",
+      "shader": "0fc76e19",
+      "technique": "Default",
+      "vs": "f41043df",
+      "vs_entry": "VS_Main"
+    },
+    {
+      "fx": "Water_Specular_Opaque_Singlesided",
+      "ps": "7a825896",
+      "ps_entry": "PS_Main",
+      "shader": "ecdab073",
+      "technique": "Default",
+      "vs": "76777b03",
+      "vs_entry": "VS_Main"
+    }
+  ],
+  "unresolved": [
+    {
+      "fx": "Specular_1Bit_Doublesided_Parallax",
+      "stages": [
+        "vs",
+        "ps"
+      ],
+      "technique": "Default"
+    }
+  ]
+}

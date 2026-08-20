@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="NuShaders.CLI/NuShaders.CLI.csproj" />
+  <Project Path="NuShaders.Formats/NuShaders.Formats.csproj" />
+  <Project Path="NuShaders.Imaging/NuShaders.Imaging.csproj" />
+  <Project Path="NuShaders.GUI/NuShaders.GUI.csproj" />
+  <Project Path="NuShaders.Tests/NuShaders.Tests.csproj" />
+</Solution>

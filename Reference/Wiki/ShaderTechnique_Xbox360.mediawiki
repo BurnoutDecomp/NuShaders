@@ -1,0 +1,138 @@
+{{ParadiseResourceTypeInfobox
+| name = ShaderTechnique
+| id = 0x32
+| category = Generic
+| memdist = Main Memory only
+| imports = [[Shader Program Buffer]]
+| importedby = [[Material Technique]]
+}}
+
+{{subpage|Development|text=Information on versions of the Shader Technique resource type used during development.}}
+
+The Shader Technique resource type is the primary shader type in Burnout Paradise. It is used in conjunction with the [[Shader Program Buffer]] type, which holds precompiled shaders.
+
+This type is only used on PlayStation 3 and Xbox 360. In the original PC game and Remastered, it is replaced by the [[Shader]] resource type.
+
+= Structures =
+=== CgsGraphics::ShaderTechnique ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || ProgramBuffer* || mpVertexProgramBuffer || Imported vertex shader resource || 
+|-
+| 0x4 || 0x4 || ProgramBuffer* || mpPixelProgramBuffer || Imported pixel shader resource || 
+|-
+| 0x8 || 0x14 || [[#ShaderConstantsInternal|ShaderConstantsInternal]] || mInternalVertexShaderConstants ||  || 
+|-
+| 0x1C || 0x10 || [[#ShaderConstantsExternal|ShaderConstantsExternal]] || mExternalObjectVertexShaderConstants ||  || 
+|-
+| 0x2C || 0x10 || [[#ShaderConstantsExternal|ShaderConstantsExternal]] || mExternalGlobalVertexShaderConstants ||  || 
+|-
+| 0x3C || 0x14 || [[#ShaderConstantsInternal|ShaderConstantsInternal]] || mInternalPixelShaderConstants ||  || 
+|-
+| 0x50 || 0x10 || [[#ShaderConstantsExternal|ShaderConstantsExternal]] || mExternalObjectPixelShaderConstants ||  || 
+|-
+| 0x60 || 0x10 || [[#ShaderConstantsExternal|ShaderConstantsExternal]] || mExternalGlobalPixelShaderConstants ||  || 
+|-
+| 0x70 || 0x10 || [[#ShaderConstantsCPU|ShaderConstantsCPU]] || mCPUShaderConstants ||  || Unused?
+|-
+| 0x80 || 0xC || [[#CgsGraphics::ShaderConstantHashTable|ShaderConstantHashTable]] || mShaderConstantHashTable ||  || 
+|-
+| 0x8C || 0x4 || [[#CgsGraphics::ShaderSampler|ShaderSampler]]* || mpaSamplers ||  || 
+|-
+| 0x90 || 0x1 || int8_t || miNumSamplers ||  || 
+|-
+| 0x91 || 0x3 ||  ||  || Padding || 
+|-
+| 0x94 || 0x4 || char* || mpacName ||  || 
+|}
+
+=== ShaderConstantsInternal ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || muNumConstantsInstances || Number of instances || Applies to size, data and hashes
+|-
+| 0x4 || 0x4 || uint32_t* || mpauConstantsInstanceSize || Per-instance data size || 
+|-
+| 0x8 || 0x4 || uint32_t** || mppaConstantsInstanceData || Instance data || Instance data is actually float[4]
+|-
+| 0xC || 0x4 || uint32_t* || mpauNamesHash || Array of hashes of the names of constants || CRC32?
+|-
+| 0x10 || 0x4 || [[#renderengine::ProgramVariableHandle|ProgramVariableHandle]]* || mpaProgramStateHandles ||  || 
+|}
+
+=== renderengine::ProgramVariableHandle ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || ProgramBuffer* || m_programBuffer ||  || Set at runtime
+|-
+| 0x4 || 0x2 || uint16_t || m_index ||  || 
+|-
+| 0x6 || 0x1 || uint8_t || m_numConstants ||  || If 4, all floats in instance data used?
+|-
+| 0x7 || 0x1 || uint8_t || m_dataFlags ||  || See [[#Handle flags|flags]]. Lower 3 bits form the data type.
+|}
+
+=== ShaderConstantsExternal ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || muNumConstantsInstances || Number of instances || Applies to data and names
+|-
+| 0x4 || 0x4 || uint32_t* || mppaConstantsInstanceData || Instance data || 
+|-
+| 0x8 || 0x4 || char** || mppacNames || Names of constants || 16 bytes reserved for chars
+|-
+| 0xC || 0x4 || [[#renderengine::ProgramVariableHandle|ProgramVariableHandle]]* || mpaProgramStateHandles ||  || Can be padding
+|}
+
+=== ShaderConstantsCPU ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || ICPUShader* || mpCPUShader ||  || Set at runtime
+|-
+| 0x4 || 0x4 || uint32_t || muNumConstantsInstances ||  || 
+|-
+| 0x8 || 0x4 || uint32_t** || mppaConstantsInstanceData ||  || 
+|-
+| 0xC || 0x4 || char** || mppacNames ||  || 
+|}
+
+=== CgsGraphics::ShaderConstantHashTable ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t* || mpuHashKeys || Constant names hashed || JAMCRC
+|-
+| 0x4 || 0x4 || char** || mppcNames ||  || 
+|-
+| 0x8 || 0x4 || uint32_t || muSize || Number of entries || 
+|}
+
+=== CgsGraphics::ShaderSampler ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || char* || mpacName || Sampler name || 
+|-
+| 0x4 || 0x2 || int16_t || miChannel ||  || 
+|-
+| 0x6 || 0x2 ||  ||  || Padding || 
+|}
+
+= Enumerations =
+=== Handle flags ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| FLAGS_FLOAT || 0x1 || Data type flag
+|-
+| FLAGS_SAMPLER || 0x2 || Data type flag
+|-
+| FLAGS_BOOL || 0x4 || Data type flag
+|-
+| FLAGS_VERTEXPROGRAM || 0x80 ||
+|}

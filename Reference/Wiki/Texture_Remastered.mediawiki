@@ -1,0 +1,181 @@
+= Structures =
+A custom D3D11-first structure. On PS4 and Switch, a compatibility layer is in place to translate D3D11 enums and structures to their native counterpart.
+
+=== Header ===
+==== 32-bit ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || [[#Texture interface|Texture interface]]* || ? || Texture interface || nullptr in file. The game sets this pointer in memory.<br/>The interface is chosen by the texture type.
+|-
+| 0x4 || 0x4 || [[#D3D11_USAGE|D3D11_USAGE]]? || ? || Usage? || Skips shader resource creation if 3
+|-
+| 0x8 || 0x4 || int32_t || ? || Dimension || See [[#Dimension|dimension]]
+|-
+| 0xC || 0x4 || void* || ? || Pixel data || Offset in file. The game sets this pointer in memory.
+|-
+| 0x10 || 0x4 || ID3D11ShaderResourceView* || ? || Shader resource view interface || nullptr in file. The game sets this pointer in memory.
+|-
+| 0x14 || 0x4 || ID3D11ShaderResourceView* || ? ||  || nullptr in file. The game sets this pointer in memory.
+|-
+| 0x18 || 0x4 || ? || ? ||  || 
+|-
+| 0x1C || 0x4 || [[Texture Formats#DXGI_FORMAT|DXGI_FORMAT]] || Format || A DXGI_FORMAT enumeration specifying the format the texture will be in after it is loaded. || 
+|-
+| 0x20 || 0x4 || uint32_t || ? || Flags || See [[#Flags|flags]]
+|-
+| 0x24 || 0x2 || uint16_t || Width || The target width of the texture. If the actual width of the texture is larger or smaller than this value then the texture will be scaled up or down to fit this target width. || 
+|-
+| 0x26 || 0x2 || uint16_t || Height || The target height of the texture. If the actual height of the texture is larger or smaller than this value then the texture will be scaled up or down to fit this target height. || 
+|-
+| 0x28 || 0x2 || uint16_t || Depth || The depth of the texture. This only applies to volume textures. || 
+|-
+| 0x2A || 0x2 || uint16_t || ArraySize || The number of elements in the array. || 
+|-
+| 0x2C || 0x1 || uint8_t || MostDetailedMip || Index of the most detailed mipmap level to use. || 
+|-
+| 0x2D || 0x1 || uint8_t || MipLevels || The maximum number of mipmap levels in the texture. || 
+|-
+| 0x2E || 0x2 || ? || ? ||  || 
+|-
+| 0x30 || 0x4 || void* || ? ||  || 
+|-
+| 0x34 || 0x4 || uint32_t || ? || Tile mode || XG_TILE_MODE. Used in placed texture mode
+|-
+| 0x38 || 0x4 || uint32_t || ? || Contents size || Size of the texture data. Used in placed texture mode
+|-
+| 0x3C || 0x4 || void* || ? || Placed texture data || nullptr in file. Set in memory to store placed texture buffer
+|}
+
+==== 64-bit ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x8 || [[#Texture interface|Texture interface]]* || ? || Texture interface || nullptr in file. The game sets this pointer in memory.<br/>The interface is chosen by the texture type.
+|-
+| 0x8 || 0x4 || ? || ? ||  || Skips shader resource creation if 3
+|-
+| 0xC || 0x4 || int32_t || ? || Dimension || See [[#Dimension|dimension]]
+|-
+| 0x10 || 0x8 || void* || ? || Pixel data || Offset in file. The game sets this pointer in memory.
+|-
+| 0x18 || 0x8 || ID3D11ShaderResourceView* || ? || Shader resource view interface || nullptr in file. The game sets this pointer in memory.
+|-
+| 0x20 || 0x8 || ID3D11ShaderResourceView* || ? ||  || nullptr in file. The game sets this pointer in memory.
+|-
+| 0x28 || 0x4 || ? || ? ||  || 
+|-
+| 0x2C || 0x4 || [[Texture Formats#DXGI_FORMAT|DXGI_FORMAT]] || Format || A DXGI_FORMAT enumeration specifying the format the texture will be in after it is loaded. || 
+|-
+| 0x30 || 0x4 || uint32_t || ? || Flags || See [[#Flags|flags]]
+|-
+| 0x34 || 0x2 || uint16_t || Width || The target width of the texture. If the actual width of the texture is larger or smaller than this value then the texture will be scaled up or down to fit this target width. || 
+|-
+| 0x36 || 0x2 || uint16_t || Height || The target height of the texture. If the actual height of the texture is larger or smaller than this value then the texture will be scaled up or down to fit this target height. || 
+|-
+| 0x38 || 0x2 || uint16_t || Depth || The depth of the texture. This only applies to volume textures. || 
+|-
+| 0x3A || 0x2 || uint16_t || ArraySize || The number of elements in the array. || 
+|-
+| 0x3C || 0x1 || uint8_t || MostDetailedMip || Index of the most detailed mipmap level to use. || 
+|-
+| 0x3D || 0x1 || uint8_t || MipLevels || The maximum number of mipmap levels in the texture. || 
+|-
+| 0x3E || 0x2 || ? || ? ||  || 
+|-
+| 0x40 || 0x8 || void* || ? ||  || 
+|-
+| 0x48 || 0x4 || uint32_t || ? || Tile mode || XG_TILE_MODE. Used in placed texture mode
+|-
+| 0x4C || 0x4 || uint32_t || ? || Contents size || Size of the texture data. Used in placed texture mode
+|-
+| 0x50 || 0x8 || void* || ? || Placed texture data || nullptr in file. Set in memory to store placed texture buffer
+|}
+
+= Unions =
+=== Texture interface ===
+Anonymous union.
+
+==== 32-bit ====
+{| class="wikitable"
+! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x4 || ID3D11Resource* || m_resource || Resource interface || 
+|-
+| 0x4 || ID3D11Texture1D* || m_texture1d || 1D texture interface || 
+|-
+| 0x4 || ID3D11Texture2D* || m_texture2d || 2D texture interface || 
+|-
+| 0x4 || ID3D11Texture3D* || m_texture3d || 3D texture interface || 
+|}
+
+==== 64-bit ====
+{| class="wikitable"
+! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x8 || ID3D11Resource* || m_resource || Resource interface || 
+|-
+| 0x8 || ID3D11Texture1D* || m_texture1d || 1D texture interface || 
+|-
+| 0x8 || ID3D11Texture2D* || m_texture2d || 2D texture interface || 
+|-
+| 0x8 || ID3D11Texture3D* || m_texture3d || 3D texture interface || 
+|}
+
+= Enumerations =
+=== D3D11_USAGE ===
+From [https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_usage D3D11_USAGE on Microsoft Learn].
+
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| D3D11_USAGE_DEFAULT || 0 || 
+|-
+| D3D11_USAGE_IMMUTABLE || 1 || 
+|-
+| D3D11_USAGE_DYNAMIC || 2 || 
+|-
+| D3D11_USAGE_STAGING || 3 || 
+|}
+
+=== Dimension ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| ? || 6 || 1D texture
+|-
+| ? || 7 || 2D texture
+|-
+| ? || 8 || 3D texture
+|-
+| ? || 9 || Cube texture
+|}
+
+=== Flags ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| ? || 0x1 || No initial pixel data
+|-
+| ? || 0x2 || Render target
+|-
+| ? || 0x4 || CPU write access
+|-
+| ? || 0x8 || Enable mip generation (if a render target)
+|-
+| ? || 0x10 || 
+|-
+| ? || 0x20 || 
+|-
+| ? || 0x40 || Depth stencil
+|-
+| ? || 0x80 || 
+|-
+| ? || 0x100 || 
+|-
+| ? || 0x200 || Placed texture (not available on PC)
+|-
+| ? || 0x400000 || No depth compression (PS4 and XB1 only)
+|-
+| ? || 0x800000 || No colour compression (PS4 and XB1 only)
+|}

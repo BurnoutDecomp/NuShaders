@@ -1,0 +1,1221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <title>ParadiseRoads.rdc EID 11871 - D3D11 Pipeline export</title>
+        <style>
+            <!--
+
+/* If you think this css is ugly/bad, open a pull request! */
+body { margin: 20px; }
+div.stage { border: 1px solid #BBBBBB; border-radius: 5px; padding: 16px; margin-bottom: 32px; }
+div.stage h1 { text-decoration: underline; margin-top: 0px; }
+div.stage table { border: 1px solid #AAAAAA; border-collapse: collapse; }
+div.stage table thead tr { border-bottom: 1px solid #AAAAAA; background-color: #EEEEFF; }
+div.stage table tr th { border-right: 1px solid #AAAAAA; padding: 6px; }
+div.stage table tr td { border-right: 1px solid #AAAAAA; background-color: #EEEEEE; padding: 3px; }
+
+-->
+        </style>
+    </head>
+    <body>
+        <h1>ParadiseRoads.rdc EID 11871 - D3D11 Pipeline export</h1>
+        <h3>Frame 15313 &gt; Colour Pass #2 (1 Targets + Depth) =&gt; DrawIndexed(381)</h3>
+        <div>
+            <a name="IA"/>
+        </div>
+        <div class="stage">
+            <h1>Input Assembler</h1>
+            <h3>Input Layouts</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Semantic Name</th>
+                        <th>Semantic Index</th>
+                        <th>Format</th>
+                        <th>Input Slot</th>
+                        <th>Byte Offset</th>
+                        <th>Per Instance</th>
+                        <th>Instance Data Step Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>POSITION</td>
+                        <td>0</td>
+                        <td>R32G32B32_FLOAT</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>False</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>NORMAL</td>
+                        <td>0</td>
+                        <td>R32G32B32_FLOAT</td>
+                        <td>0</td>
+                        <td>12</td>
+                        <td>False</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>TEXCOORD</td>
+                        <td>0</td>
+                        <td>R32G32_FLOAT</td>
+                        <td>0</td>
+                        <td>24</td>
+                        <td>False</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Vertex Buffers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Buffer</th>
+                        <th>Stride</th>
+                        <th>Offset</th>
+                        <th>Byte Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>Buffer 20681</td>
+                        <td>32</td>
+                        <td>0</td>
+                        <td>16736</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Index Buffer</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Buffer</th>
+                        <th>Format</th>
+                        <th>Offset</th>
+                        <th>Byte Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Buffer 20680</td>
+                        <td>R16_UINT</td>
+                        <td>0</td>
+                        <td>1616</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Primitive Topology</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Triangle List</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a name="VS"/>
+        </div>
+        <div class="stage">
+            <h1>Vertex Shader</h1>
+            <h3>Shader</h3>
+            <p>Vertex Shader 695</p>
+            <h3>Resources</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Name</th>
+                        <th>View Type</th>
+                        <th>Resource Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Depth</th>
+                        <th>Array Size</th>
+                        <th>View Format</th>
+                        <th>Resource Format</th>
+                        <th>View Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Samplers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Addressing</th>
+                        <th>Border Colour</th>
+                        <th>Comparison</th>
+                        <th>Filter</th>
+                        <th>Max Anisotropy</th>
+                        <th>Min LOD</th>
+                        <th>Max LOD</th>
+                        <th>Mip Bias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Constant Buffers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Buffer</th>
+                        <th>Byte Offset</th>
+                        <th>Byte Range</th>
+                        <th>Number of Variables</th>
+                        <th>Bytes Needed</th>
+                        <th>Bytes Provided</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>Buffer 696</td>
+                        <td>0</td>
+                        <td>65536</td>
+                        <td>21</td>
+                        <td>784</td>
+                        <td>784</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a name="HS"/>
+        </div>
+        <div class="stage">
+            <h1>Hull Shader</h1>
+            <h3>Shader</h3>
+            <p>Unbound</p>
+        </div>
+        <div>
+            <a name="DS"/>
+        </div>
+        <div class="stage">
+            <h1>Domain Shader</h1>
+            <h3>Shader</h3>
+            <p>Unbound</p>
+        </div>
+        <div>
+            <a name="GS"/>
+        </div>
+        <div class="stage">
+            <h1>Geometry Shader</h1>
+            <h3>Shader</h3>
+            <p>Unbound</p>
+            <h3>Stream Out Targets</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Buffer</th>
+                        <th>Offset</th>
+                        <th>Byte Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>Empty</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Empty</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Empty</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Empty</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a name="RS"/>
+        </div>
+        <div class="stage">
+            <h1>Rasterizer</h1>
+            <h3>States</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fill Mode</th>
+                        <th>Cull Mode</th>
+                        <th>Front CCW</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Solid</td>
+                        <td>Back</td>
+                        <td>Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scissor Enable</th>
+                        <th>Line AA Enable</th>
+                        <th>Multisample Enable</th>
+                        <th>Forced Sample Count</th>
+                        <th>Conservative Raster</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Yes</td>
+                        <td>No</td>
+                        <td>Yes</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Depth Clip</th>
+                        <th>Depth Bias</th>
+                        <th>Depth Bias Clamp</th>
+                        <th>Slope Scaled Bias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Yes</td>
+                        <td>0</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Viewports</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Min Depth</th>
+                        <th>Max Depth</th>
+                        <th>Enabled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1600</td>
+                        <td>900</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>No</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Scissors</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Enabled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1600</td>
+                        <td>900</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a name="PS"/>
+        </div>
+        <div class="stage">
+            <h1>Pixel Shader</h1>
+            <h3>Shader</h3>
+            <p>Pixel Shader 851</p>
+            <h3>Resources</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Name</th>
+                        <th>View Type</th>
+                        <th>Resource Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Depth</th>
+                        <th>Array Size</th>
+                        <th>View Format</th>
+                        <th>Resource Format</th>
+                        <th>View Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>2D Texture 4132</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>256</td>
+                        <td>256</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>BC1_UNORM</td>
+                        <td>BC1_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 9, </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2D Texture 3870</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>256</td>
+                        <td>256</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>BC1_UNORM</td>
+                        <td>BC1_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 9, </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2D TextureArray 913</td>
+                        <td>Texture Cube</td>
+                        <td>Texture Cube Array</td>
+                        <td>2048</td>
+                        <td>2048</td>
+                        <td>1</td>
+                        <td>6</td>
+                        <td>BC1_UNORM</td>
+                        <td>BC1_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 12, First Slice: 0, Array Size: 6, </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2D Texture 3604</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>16</td>
+                        <td>16</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>BC3_UNORM</td>
+                        <td>BC3_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 5, </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>2D Texture 2748</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>256</td>
+                        <td>128</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>BC1_UNORM</td>
+                        <td>BC1_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 9, </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>2D Texture 7012</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>4096</td>
+                        <td>2048</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>BC1_UNORM</td>
+                        <td>BC1_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 13, </td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>2D Render Target 100</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>800</td>
+                        <td>450</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>B8G8R8A8_UNORM</td>
+                        <td>B8G8R8A8_UNORM</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>2D Render Target 113</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>1024</td>
+                        <td>1024</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>R32_FLOAT</td>
+                        <td>R32_FLOAT</td>
+                        <td>Highest Mip: 0, Num Mips: 11, </td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>2D Render Target 119</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>R32G32_FLOAT</td>
+                        <td>R32G32_FLOAT</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>2D Render Target 88</td>
+                        <td>Texture Cube</td>
+                        <td>Texture Cube Array</td>
+                        <td>1024</td>
+                        <td>1024</td>
+                        <td>1</td>
+                        <td>6</td>
+                        <td>R8G8B8A8_UNORM</td>
+                        <td>R8G8B8A8_UNORM</td>
+                        <td>First Slice: 0, Array Size: 6, </td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>2D Texture 919</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>2048</td>
+                        <td>2048</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>BC3_UNORM</td>
+                        <td>BC3_UNORM</td>
+                        <td>Highest Mip: 0, Num Mips: 12, </td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>2D Depth Target 75</td>
+                        <td>Texture 2D</td>
+                        <td>Texture 2D</td>
+                        <td>4096</td>
+                        <td>6144</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>R32_FLOAT</td>
+                        <td>R32_TYPELESS</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Samplers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Addressing</th>
+                        <th>Border Colour</th>
+                        <th>Comparison</th>
+                        <th>Filter</th>
+                        <th>Max Anisotropy</th>
+                        <th>Min LOD</th>
+                        <th>Max LOD</th>
+                        <th>Mip Bias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>UVW: Wrap</td>
+                        <td>0, 0, 0, 0</td>
+                        <td>Never</td>
+                        <td>Min&amp;Mag&amp;Mip: Anisotropic</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>FLT_MAX</td>
+                        <td>-0.8999999761581421</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>UVW: Wrap</td>
+                        <td>0, 0, 0, 0</td>
+                        <td>Never</td>
+                        <td>Min&amp;Mag&amp;Mip: Anisotropic</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>FLT_MAX</td>
+                        <td>-0.8999999761581421</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>UV: ClampEdge, W: Wrap</td>
+                        <td>0, 0, 0, 0</td>
+                        <td>Less</td>
+                        <td>Min&amp;Mag: Linear, Mip: Point</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>FLT_MAX</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Constant Buffers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Buffer</th>
+                        <th>Byte Offset</th>
+                        <th>Byte Range</th>
+                        <th>Number of Variables</th>
+                        <th>Bytes Needed</th>
+                        <th>Bytes Provided</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>Buffer 852</td>
+                        <td>0</td>
+                        <td>65536</td>
+                        <td>21</td>
+                        <td>784</td>
+                        <td>784</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a name="OM"/>
+        </div>
+        <div class="stage">
+            <h1>Output Merger</h1>
+            <h3>Blend State</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Independent Blend Enable</th>
+                        <th>Alpha to Coverage</th>
+                        <th>Sample Mask</th>
+                        <th>Blend Factor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>FFFFFFFF</td>
+                        <td>1.00, 1.00, 1.00, 1.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Target Blends</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Blend Enable</th>
+                        <th>Logic Enable</th>
+                        <th>Blend Source</th>
+                        <th>Blend Destination</th>
+                        <th>Blend Operation</th>
+                        <th>Alpha Blend Source</th>
+                        <th>Alpha Blend Destination</th>
+                        <th>Alpha Blend Operation</th>
+                        <th>Logic Operation</th>
+                        <th>Write Mask</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>One</td>
+                        <td>Zero</td>
+                        <td>Add</td>
+                        <td>No-Op</td>
+                        <td>RGBA</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Depth State</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Depth Test Enable</th>
+                        <th>Depth Writes Enable</th>
+                        <th>Depth Function</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                        <td>Less Equal</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Stencil State</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stencil Test Enable</th>
+                        <th>Stencil Read Mask</th>
+                        <th>Stencil Write Mask</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>No</td>
+                        <td>000000FF</td>
+                        <td>000000FF</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Face</th>
+                        <th>Function</th>
+                        <th>Pass Operation</th>
+                        <th>Fail Operation</th>
+                        <th>Depth Fail Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Front</td>
+                        <td>Always</td>
+                        <td>Keep</td>
+                        <td>Keep</td>
+                        <td>Keep</td>
+                    </tr>
+                    <tr>
+                        <td>Back</td>
+                        <td>Always</td>
+                        <td>Keep</td>
+                        <td>Keep</td>
+                        <td>Keep</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Render targets</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Name</th>
+                        <th>View Type</th>
+                        <th>Resource Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Depth</th>
+                        <th>Array Size</th>
+                        <th>View Format</th>
+                        <th>Resource Format</th>
+                        <th>View Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>2D Render Target 50</td>
+                        <td>Texture 2D MS</td>
+                        <td>Texture 2D MS</td>
+                        <td>1600</td>
+                        <td>900</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>B8G8R8A8_UNORM</td>
+                        <td>B8G8R8A8_UNORM</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Depth target</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Name</th>
+                        <th>View Type</th>
+                        <th>Resource Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Depth</th>
+                        <th>Array Size</th>
+                        <th>View Format</th>
+                        <th>Resource Format</th>
+                        <th>View Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>2D Depth Target 54</td>
+                        <td>Texture 2D MS</td>
+                        <td>Texture 2D MS</td>
+                        <td>1600</td>
+                        <td>900</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>D32</td>
+                        <td>R32_TYPELESS</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a name="CS"/>
+        </div>
+        <div class="stage">
+            <h1>Compute Shader</h1>
+            <h3>Shader</h3>
+            <p>Unbound</p>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<Window x:Class="NuShaders.GUI.Views.TextureBrowserDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Texture browser" Height="600" Width="620" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <DrawingBrush x:Key="Checker" TileMode="Tile" Viewport="0,0,16,16" ViewportUnits="Absolute" Stretch="None">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#FFFFFF">
+                        <GeometryDrawing.Geometry><RectangleGeometry Rect="0,0,16,16" /></GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#CCCCCC">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="0,0,8,8" />
+                                <RectangleGeometry Rect="8,8,8,8" />
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </Window.Resources>
+
+    <DockPanel Margin="10">
+        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+            <TextBlock Text="Filter" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <TextBlock DockPanel.Dock="Right" Text="{Binding CountLabel}" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="Gray" />
+            <TextBox Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+        </DockPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Cancel" Width="84" Padding="8,3" Command="{Binding CancelCommand}" />
+            <Button Content="Select" Width="84" Padding="8,3" Margin="8,0,0,0" FontWeight="Bold" Command="{Binding OkCommand}" />
+        </StackPanel>
+
+        <ListBox ItemsSource="{Binding ItemsView}" SelectedItem="{Binding SelectedItem}" MouseDoubleClick="Item_DoubleClick"
+                 HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                 VirtualizingPanel.ScrollUnit="Pixel">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="56">
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Export as DDS…" Click="ExportDDS_Click" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="56" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Width="50" Height="50" Background="{StaticResource Checker}" BorderBrush="#888" BorderThickness="1">
+                            <Image Source="{Binding Thumbnail}" Stretch="Uniform" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding ShortName}" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayName}" />
+                            <TextBlock Text="{Binding Info}" Foreground="Gray" FontSize="11" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</Window>

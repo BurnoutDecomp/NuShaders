@@ -1,0 +1,145 @@
+The Remastered PC build ships precompiled DX11 shaders. Each Shader Program Buffer has two portions: the '''secondary''' (graphics memory) holds the raw DXBC blob, and the '''primary''' (main memory) holds a pre-parsed reflection/binding table the engine reads instead of the DXBC's RDEF chunk.
+
+All values are little-endian. Resource IDs match the X360 build (e.g. Specular_1Bit_Doublesided VS = 2EC61041, PS = A3A50BAB). Reverse-engineered from the retail SHADERS bundle (242 primaries) and confirmed by generating shaders that load and render correctly in-game.
+
+The secondary is the DXBC blob (the <code>fxc</code> output) zero-padded to 0x80: <code>size = ceil(dxbcTotalSize / 0x80) * 0x80</code>, where dxbcTotalSize is the uint32 at 0x18 of the DXBC header.
+
+= Structures =
+=== ProgramBuffer ===
+The primary portion. Followed immediately by the register-usage mask (0x20) and the [[#ResourceBinding|ResourceBinding]] array (0x54).
+
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || m_programType || Shader type || 0 = vertex shader, 1 = pixel shader
+|-
+| 0x4 || 0x4 || void* || ? || Runtime pointer || Non-zero (0xFEE9xxxx) in file by default; overwritten at runtime. Safe to zero.
+|-
+| 0x8 || 0x4 || uint32_t || ? ||  || Always 0
+|-
+| 0xC || 0x4 || uint32_t || ? || Version/flags || Always 1
+|-
+| 0x10 || 0x4 || uint32_t || ? ||  || Always 0
+|-
+| 0x14 || 0x4 || uint32_t || m_programSize || Size of the compiled shader || = dxbcTotalSize (uint32 @0x18 of the DXBC)
+|-
+| 0x18 || 0x4 || uint32_t || ? || Size of the string table || Sum of every NUL-terminated name length at the end of the file
+|-
+| 0x1C || 0x4 || uint32_t || m_numBindings || Number of bindings || Count is the low byte; high bytes overlap the mask
+|-
+| 0x20 || 0x34 || uint8_t[52] || ? || Register-usage mask || See [[#Register-usage mask|Register-usage mask]]
+|-
+| 0x54 || array || [[#ResourceBinding|ResourceBinding]]* || ? || Bindings || m_numBindings entries
+|}
+
+=== Register-usage mask ===
+A 52-byte region at 0x20. Only the first 16 bytes vary per shader; the remainder is a fixed template.
+
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x10 || uint8_t[16] || ? || Sampler-register map || Init all 16 to 0xFF; for each '''sampler''' register r used, set map[(r+15) % 16] = r (left-rotation by one). Textures and cbuffers are not in this map.
+|-
+| 0x10 || 0x24 || uint8_t[36] || ? || Fixed template || Identical in 235/242 retail primaries
+|}
+
+The template (offsets relative to 0x30 in the file):
+ 30: FF FF FF FF FF FF FF FF FF FF FF FF FF FF 00 FF
+ 40: FF FF FF FF FF FF FF FF FF FF FF FF FF 00 00 00
+ 50: 00 00 00 00
+
+=== ResourceBinding ===
+The binding array is sorted: all samplers (by register), then textures, then cbuffers. A texture paired with sampler "Foo" is named "FooTexture".
+
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || char* || ? || Pointer to binding name string ||
+|-
+| 0x4 || 0x1 || uint8_t || ? || Register slot || s#/t#/b#
+|-
+| 0x5 || 0x1 || [[#BindingType|BindingType]] || ? || Binding type ||
+|-
+| 0x6 || 0x1 || uint8_t || ? || Bind count || Always 1
+|-
+| 0x7 || 0x1 || uint8_t || ? ||  || Always 0
+|}
+
+=== ConstantBufferDescriptor ===
+Located at align16(0x54 + m_numBindings * 8). Followed by a GAP of zeros (length = offsetA) before the [[#VariableDescriptor|VariableDescriptor]] array; offsetB points into the GAP. The engine accepts any consistent GAP, as it is pure zeros and offsetA = varTableOffset &minus; descriptorEnd.
+
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || ? ||  || Always 2
+|-
+| 0x4 || 0x4 || uint32_t || ? ||  || Always 4
+|-
+| 0x8 || 0x4 || uint32_t || ? ||  || Always 0
+|-
+| 0xC || 0x4 || uint32_t || ? || offsetA / GAP size || = varTableOffset &minus; descriptorEnd
+|-
+| 0x10 || 0x4 || uint32_t || ? ||  || Always 1
+|-
+| 0x14 || 0x4 || void* || ? || Runtime pointer || Write 0
+|-
+| 0x18 || 0x4 || uint32_t || ? || offsetB || = descriptorEnd + 0x54 + m_numBindings * 8 (points into the GAP)
+|-
+| 0x1C || 0x4 || uint32_t || ? ||  || Always 0
+|-
+| 0x20 || 0x4 || char* || ? || Pointer to cbuffer name string || "$Globals"
+|-
+| 0x24 || 0x4 || uint32_t || m_numConstants || Number of constants ||
+|-
+| 0x28 || 0x4 || uint32_t || ? ||  || Always 1
+|-
+| 0x2C || 0x4 || [[#VariableDescriptor|VariableDescriptor]]* || ? || Variable table || Absolute file offset
+|}
+
+=== VariableDescriptor ===
+One per cbuffer constant. Equivalent to the DXBC RDEF reflection; can be generated from the CSO if reflection is not stripped.
+
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || char* || ? || Pointer to variable name string ||
+|-
+| 0x4 || 0x4 || uint32_t || ? || Cbuffer byte offset ||
+|-
+| 0x8 || 0x4 || uint32_t || ? || Size in bytes || Rows * 16 (e.g. float4x4[3] = 192)
+|-
+| 0xC || 0x1 || uint8_t || ? || Variable index || Position among all reflected vars in this shader's cbuffer
+|-
+| 0xD || 0x1 || uint8_t || ? || Type class || Always 0x03 (D3D_REGISTER_COMPONENT_FLOAT32)
+|-
+| 0xE || 0x1 || uint8_t || ? || Rows || float4x4 = 4, float4x4[3] = 12, vectors/scalars = 1
+|-
+| 0xF || 0x1 || uint8_t || ? || Columns || float4/float4x4 = 4, float3 = 3, float = 1
+|}
+
+The file ends with the string table: NUL-terminated ASCII names, binding names first (in binding-array order) then constant names. "$Globals" is shared between its binding entry and the descriptor.
+
+= Enumerations =
+=== ProgramType ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| Vertex shader || 0 ||
+|-
+| Pixel shader || 1 ||
+|}
+
+=== BindingType ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| Texture (SRV) || 0x05 ||
+|-
+| Sampler || 0x0A || Includes comparison samplers
+|-
+| Constant buffer || 0x1A || e.g. $Globals
+|}
+
+= Notes =
+* The engine fills the cbuffer from each shader's own DXBC reflection, not the primary's variable offsets, so a shader's cbuffer layout only needs to be internally consistent. A USE_HDR_CONSTANTS permutation adds an unused HDRConstants at c1, shifting every later constant +1 register; this is why some retail primaries' variable offsets are +1 versus the DXBC.
+* To pack from scratch: secondary = DXBC (0x80-padded); primary = ProgramBuffer header + register-usage mask + ResourceBinding array + ConstantBufferDescriptor + zero GAP + VariableDescriptor array + string table, all derivable from <code>fxc /dumpbin</code> reflection. See <code>Build/pack_bpr_shader.ps1</code>.

@@ -1,0 +1,383 @@
+#include "../../Include/Transform.fxh"
+#include "../../Include/Fog.fxh"
+#include "../../Include/Irradiance.fxh"
+#define SHADOW_APPLY_Z_BIAS
+#define SHADOW_Z_BIAS_VALUE 0.0001
+#include "../../Include/Shadow.fxh"
+float3x4 boneMatrices[ 60 ] 
+<
+    string scope = "object";
+#include "../../Include/Skinning.fxh"
+>;
+#include "../../Include/DepthEncode.fxh"
+#include "../../Include/Constants.fxh"
+float3   KeyLightColour
+<
+ string scope = "global";
+>;
+float3      KeyLightDirection 
+<
+    string scope = "global";
+>;
+float3      ViewPosition : Direction
+<
+    string scope = "global";
+>;
+float3      KeyLightSpecularColour
+<
+    string scope = "global";
+>;
+float3      KeyLightClampedColour
+<
+    string scope = "global";
+>;
+float4x4    worldViewProj : WorldViewProjection
+<
+    string scope = "object";
+>;
+float4x4    world : World
+<
+    string scope = "object";
+>;
+float4      g_damageConstants   
+<
+    string scope = "object";
+> = float4( 0.0, 0.0, 0.0, 0.0 );
+float4      g_PerVehicleFog
+<
+    string scope = "object";
+> = float4( 0.0, 0.0, 0.0, 0.0 );
+float4  g_fresnelRanges 
+<
+    string scope = "material";
+    string UIName = "Fresnel Ranges";
+> = float4( 1.0, 2.0, 0.5, 1.0 );
+float4  g_scratchFresnelRanges
+<
+    string scope = "material";
+    string UIName = "Scratch Fresnel Ranges";
+> = float4( 0.0, 1.0, 0.0, 0.5 );
+float4  g_reflectConstants
+<
+    string scope = "material";
+    string UIName = "Reflection Constants";
+> = float4( 32.0, 1.0, 1.0, 1.0 );
+float4  g_specularConstants
+<
+    string scope = "material";
+    string UIName = "Specular Constants";
+> = float4( 0.996, 2.0, 0.5, 1.0 );
+float4  materialDiffuse
+<
+    string scope = "material";
+    string UIWidget = "rgba";
+> = float4( 1.0 , 1.0 , 1.0 , 1.0 );
+texture2D DiffuseTexture
+<
+    string scope = "material";
+>;
+sampler DiffuseTextureSampler : register(s0)
+<
+    string scope = "material";
+> = sampler_state
+{
+    Texture = <DiffuseTexture>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+};
+#define NORMAL_MAP_SWAP_TB
+#include "../../Include/NormalMapping.fxh"
+#include "../../Include/Fresnel.fxh"
+#include "../../Include/Utility.fxh"
+#include "../../Include/VehicleDeformation.fxh"
+float3
+DecodeNormalMap(
+    float2   normalTex,
+    float3   normal,
+    float3   tangent,
+    float3   binormal,
+    float    scale )
+{
+    float3   result;
+    result.xy = ( normalTex.xy - float2( 0.5, 0.5 ) ) * scale;
+    result.z = sqrt( 1.0 - saturate( dot( result.xy, result.xy ) ) );
+    result = normalize( ( result.z * normal ) + ( result.y * binormal ) + ( result.x * tangent ) );
+    return result;
+}
+float3
+DecodeNormalMap3(
+    float3   normalTex,
+    float3   normal,
+    float3   tangent,
+    float3   binormal,
+    float    scale )
+{
+    float3   result;
+    result.xyz = ( normalTex.xyz - float3( 0.5, 0.5, 0.5 ) ) * scale;
+    result = normalize( ( result.z * normal ) + ( result.y * binormal ) + ( result.x * tangent ) );
+    return result;
+}
+struct DamagedInput
+{
+    float3  position                : POSITION;
+        float3  normal                  : NORMAL;
+    float2  texCoordDiffuse         : TEXCOORD0;
+    float4  boneIndices             : BLENDINDICES;
+    float4  boneWeights             : BLENDWEIGHT;
+};
+struct DamagedOutput
+{
+    float4 hPosition                : POSITION;
+    float3 vertToEyeVector          : TEXCOORD0;
+    float3 worldNormal              : TEXCOORD1;
+    float4 texCoords                : TEXCOORD2;
+    SHADOWMAP_INTERPOLATORS2( 3,4 )
+    float3 indirectColour           : TEXCOORD5;
+#ifdef D_MRT
+    float2 hPositionDepthCopy       : TEXCOORD7;
+#endif
+};
+DamagedOutput
+DamagedVS( DamagedInput IN )
+{
+    DamagedOutput OUT;
+    float3 WorldSpacePosition;
+    float3 skinnedPosition;
+    float3 skinnedNormal;
+    DoSkinningPN( IN.position, IN.normal, IN.boneIndices, IN.boneWeights, skinnedPosition, skinnedNormal );
+    WorldSpacePosition = mul( float4( skinnedPosition, 1.0f ), world ).xyz;
+    OUT.worldNormal     = mul( skinnedNormal, (float3x3)world );
+    OUT.hPosition       = TransformWorldToProjection( WorldSpacePosition );
+#ifdef D_MRT
+    OUT.hPositionDepthCopy = OUT.hPosition.zw;
+#endif
+    float3 verletOffset = 0.0;
+    float deformation = 0.0;
+    OUT.texCoords.zw = 0.0;
+    OUT.texCoords.xy = IN.texCoordDiffuse;
+    OUT.indirectColour.xyz = ComputeIrradianceFast( OUT.worldNormal );
+    OUT.vertToEyeVector.xyz = (ViewPosition - WorldSpacePosition);
+ float3 objectCentreWorldSpace = world[3].xyz;
+    float objectCentreViewSpaceDepth = GetViewSpaceDepthFromWorldPosition( objectCentreWorldSpace );
+    CALC_SHADOWMAP_INTERPOLATORS2_SELECT_VS( WorldSpacePosition, OUT.hPosition.w, objectCentreViewSpaceDepth );
+    return OUT;
+}
+#ifdef D_MRT
+void DamagedPS( in  DamagedOutput IN,
+                   out float4 oColour0 : COLOR0,
+                   out float4 oColour1 : COLOR1 )
+#else
+float4
+DamagedPS( DamagedOutput IN 
+             ) : COLOR
+#endif
+{
+    float3   keyLightDirection = float3( -KeyLightDirection );
+    float4   diffuseTex = tex2D( DiffuseTextureSampler, IN.texCoords.xy );
+    const float selfIllumination = 0.0;
+    float3   normal = normalize( float3( IN.worldNormal ) );
+    float    lightDotNormal       = saturate( dot( normal, keyLightDirection ) );
+ float3   view = normalize( float3( IN.vertToEyeVector.xyz ) );
+ float3 materialColour = float3( materialDiffuse.rgb );
+    float3   baseColour = lerp( materialColour, diffuseTex.rgb, diffuseTex.a );
+    float4   fresnelRanges = (float4)g_fresnelRanges;
+        float alpha = diffuseTex.a;
+    float3   reflectedView;
+    float2   fresnelValues;
+    CalculateFresnel( normal, view, fresnelRanges, (float)g_reflectConstants.y, reflectedView, fresnelValues );
+    float    reflectDotLight = saturate( dot( reflectedView, keyLightDirection ) );
+    float specularIntensity = pow( reflectDotLight, (float)g_reflectConstants.x );
+    float    hotSpotIntensity = 0.0;
+    float3  specularLightColour = (float3)KeyLightSpecularColour.rgb;
+    float3  specularColour = ( specularLightColour * specularIntensity + hotSpotIntensity ) * fresnelValues.x;
+    float ambientOcclusion = float(1.0);
+    float shadowModulation = CALC_SHADOW_FACTOR_2_SELECT_VEHICLE( lightDotNormal );
+    float illumination = lightDotNormal * shadowModulation + selfIllumination;
+    float3   indirectColour = IN.indirectColour.rgb;
+    float3   lightColour = ( (float3)indirectColour * ambientOcclusion + (float3)KeyLightClampedColour.rgb * illumination );
+    float    lightIntensity = saturate( dot( lightColour, k_luminanceMapping ) / (float)FogColourPlusWhiteLevel.w );
+    float3   diffuseColour = baseColour * lightColour;
+    float3   finalColour;
+    finalColour = diffuseColour + ( specularColour * shadowModulation ) * lightIntensity;
+    finalColour = ( finalColour * float( g_PerVehicleFog.a ) ) + float3(g_PerVehicleFog.rgb);
+#ifdef D_MRT
+    oColour0 = float4(finalColour, alpha);
+    float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
+    oColour1 = ConvertDepthToARGB( lfDepth ) + 2.0f;
+#else
+    return float4(finalColour, alpha);
+#endif
+}
+technique Damaged
+{
+    pass p0
+    {
+            AlphaRef = 64;
+            AlphaBlendEnable = True;
+        AlphaFunc = GREATER;
+        AlphaTestEnable = True;
+        SrcBlend = SrcAlpha;
+        DestBlend = InvSrcAlpha;
+        VertexShader = compile vs_3_0 DamagedVS();
+        PixelShader  = compile ps_3_0 DamagedPS();
+    }
+}
+struct DefaultInput
+{
+    float3  position                : POSITION;
+        float3  normal                  : NORMAL;
+    float2  texCoordDiffuse         : TEXCOORD0;
+    float4  boneIndices             : BLENDINDICES;
+    float4  boneWeights             : BLENDWEIGHT;
+};
+struct DefaultOutput
+{
+    float4 hPosition                : POSITION;
+    float3 vertToEyeVector          : TEXCOORD0;
+    float3 worldNormal              : TEXCOORD1;
+    float4 texCoords                : TEXCOORD2;
+    SHADOWMAP_INTERPOLATORS2( 3,4 )
+    float3 indirectColour           : TEXCOORD5;
+#ifdef D_MRT
+    float2 hPositionDepthCopy       : TEXCOORD7;
+#endif
+};
+DefaultOutput
+DefaultVS( DefaultInput IN )
+{
+    DefaultOutput OUT;
+    float3 WorldSpacePosition;
+    float3 skinnedPosition;
+    float3 skinnedNormal;
+    DoSkinningPN( IN.position, IN.normal, IN.boneIndices, IN.boneWeights, skinnedPosition, skinnedNormal );
+    WorldSpacePosition = mul( float4( skinnedPosition, 1.0f ), world ).xyz;
+    OUT.worldNormal     = mul( skinnedNormal, (float3x3)world );
+    OUT.hPosition       = TransformWorldToProjection( WorldSpacePosition );
+#ifdef D_MRT
+    OUT.hPositionDepthCopy = OUT.hPosition.zw;
+#endif
+    float3 verletOffset = 0.0;
+    float deformation = 0.0;
+    OUT.texCoords.zw = 0.0;
+    OUT.texCoords.xy = IN.texCoordDiffuse;
+    OUT.indirectColour.xyz = ComputeIrradianceFast( OUT.worldNormal );
+    OUT.vertToEyeVector.xyz = (ViewPosition - WorldSpacePosition);
+ float3 objectCentreWorldSpace = world[3].xyz;
+    float objectCentreViewSpaceDepth = GetViewSpaceDepthFromWorldPosition( objectCentreWorldSpace );
+    CALC_SHADOWMAP_INTERPOLATORS2_SELECT_VS( WorldSpacePosition, OUT.hPosition.w, objectCentreViewSpaceDepth );
+    return OUT;
+}
+#ifdef D_MRT
+void DefaultPS( in  DefaultOutput IN,
+                   out float4 oColour0 : COLOR0,
+                   out float4 oColour1 : COLOR1 )
+#else
+float4
+DefaultPS( DefaultOutput IN 
+             ) : COLOR
+#endif
+{
+    float3   keyLightDirection = float3( -KeyLightDirection );
+    float4   diffuseTex = tex2D( DiffuseTextureSampler, IN.texCoords.xy );
+    const float selfIllumination = 0.0;
+    float3   normal = normalize( float3( IN.worldNormal ) );
+    float    lightDotNormal       = saturate( dot( normal, keyLightDirection ) );
+ float3   view = normalize( float3( IN.vertToEyeVector.xyz ) );
+ float3 materialColour = float3( materialDiffuse.rgb );
+    float3   baseColour = lerp( materialColour, diffuseTex.rgb, diffuseTex.a );
+    float4   fresnelRanges = (float4)g_fresnelRanges;
+        float alpha = diffuseTex.a;
+    float3   reflectedView;
+    float2   fresnelValues;
+    CalculateFresnel( normal, view, fresnelRanges, (float)g_reflectConstants.y, reflectedView, fresnelValues );
+    float    reflectDotLight = saturate( dot( reflectedView, keyLightDirection ) );
+    float specularIntensity = pow( reflectDotLight, (float)g_reflectConstants.x );
+    float    hotSpotIntensity = 0.0;
+    float3  specularLightColour = (float3)KeyLightSpecularColour.rgb;
+    float3  specularColour = ( specularLightColour * specularIntensity + hotSpotIntensity ) * fresnelValues.x;
+    float ambientOcclusion = float(1.0);
+    float shadowModulation = CALC_SHADOW_FACTOR_2_SELECT_VEHICLE( lightDotNormal );
+    float illumination = lightDotNormal * shadowModulation + selfIllumination;
+    float3   indirectColour = IN.indirectColour.rgb;
+    float3   lightColour = ( (float3)indirectColour * ambientOcclusion + (float3)KeyLightClampedColour.rgb * illumination );
+    float    lightIntensity = saturate( dot( lightColour, k_luminanceMapping ) / (float)FogColourPlusWhiteLevel.w );
+    float3   diffuseColour = baseColour * lightColour;
+    float3   finalColour;
+    finalColour = diffuseColour + ( specularColour * shadowModulation ) * lightIntensity;
+    finalColour = ( finalColour * float( g_PerVehicleFog.a ) ) + float3(g_PerVehicleFog.rgb);
+#ifdef D_MRT
+    oColour0 = float4(finalColour, alpha);
+    float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
+    oColour1 = ConvertDepthToARGB( lfDepth ) + 2.0f;
+#else
+    return float4(finalColour, alpha);
+#endif
+}
+technique Default
+{
+    pass p0
+    {
+            AlphaRef = 64;
+            AlphaBlendEnable = True;
+        AlphaFunc = GREATER;
+        AlphaTestEnable = True;
+        SrcBlend = SrcAlpha;
+        DestBlend = InvSrcAlpha;
+        VertexShader = compile vs_3_0 DefaultVS();
+        PixelShader  = compile ps_3_0 DefaultPS();
+    }
+}
+struct vertexInputZOnlySkinned {
+    float3 position        : POSITION;
+    float4 boneIndices    : BLENDINDICES;
+    float4 boneWeights    : BLENDWEIGHT;
+};
+struct vertexOutputZOnlySkinned {
+    float4 hPosition   : POSITION;
+#ifdef D_MSAA_ENABLED
+    float2 hPositionDepthCopy   : TEXCOORD0;
+#endif
+};
+vertexOutputZOnlySkinned VS_Main_ZOnlySkinned( vertexInputZOnlySkinned IN
+         ) 
+{ 
+    vertexOutputZOnlySkinned OUT;
+    float3 WorldSpacePosition;
+    float3 skinnedPosition;
+    DoSkinningP( IN.position, IN.boneIndices, IN.boneWeights, skinnedPosition );
+    WorldSpacePosition = mul( float4( skinnedPosition, 1.0f ), world ).xyz;
+    OUT.hPosition = TransformWorldToProjection( WorldSpacePosition );
+#ifdef D_MSAA_ENABLED
+    OUT.hPositionDepthCopy = OUT.hPosition.zw;
+#endif
+    return OUT;
+}
+float4 PS_Main_ZOnlySkinned( vertexOutputZOnlySkinned IN ): COLOR
+{
+#ifdef D_MSAA_ENABLED
+#ifdef D_ADD_STENCIL
+    float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y ) + 2.0f;
+#else
+    float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
+#endif
+    return lfDepth.xxxx;
+#else
+    return float4(1,1,1,1);
+#endif
+}
+technique ZOnlyUndamagedBoneSkinning
+<
+  string sharedName="ZOnlyVehicleBoneSkinningOpaqueSingleSided";
+>
+{
+    pass p0
+    {  
+        CullMode = cw;
+#ifndef D_MSAA_ENABLED
+        ColorWriteEnable = 0;
+#endif
+  VertexShader = compile vs_3_0 VS_Main_ZOnlySkinned();
+  PixelShader  = compile ps_3_0 PS_Main_ZOnlySkinned();
+    }
+}

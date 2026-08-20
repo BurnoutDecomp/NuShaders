@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Emit nushaders.exe so PowerShell calls a stable name. -->
+    <AssemblyName>nushaders</AssemblyName>
+    <RootNamespace>NuShaders.CLI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NuShaders.Formats\NuShaders.Formats.csproj" />
+    <ProjectReference Include="..\NuShaders.Imaging\NuShaders.Imaging.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Pure binary/format library: no process spawning, no console I/O.
+       Common properties live in ../Directory.Build.props. -->
+
+</Project>

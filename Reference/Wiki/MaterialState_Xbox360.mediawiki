@@ -1,0 +1,140 @@
+= Structures =
+{{todo|Needs to be researched. These structures only describe the basic layout.}}
+
+=== CgsGraphics::MaterialState ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || [[#renderengine::BlendState|BlendState]]* || mpBlendState ||  || 
+|-
+| 0x4 || 0x4 || [[#renderengine::DepthStencilState|DepthStencilState]]* || mpDepthStencilState ||  || 
+|-
+| 0x8 || 0x4 || [[#renderengine::RasterizerState|RasterizerState]]* || mpRasterizerState ||  || 
+|}
+
+=== renderengine::BlendState ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || ? ||  || 0x10001 in samples and initialization
+|-
+| 0x4 || 0x4 || uint32_t || ? ||  || 0x10001 in samples and initialization
+|-
+| 0x8 || 0x4 || uint32_t || ? ||  || 0x10001 in samples and initialization
+|-
+| 0xC || 0x4 || uint32_t || ? ||  || 0x10001 in samples and initialization
+|-
+| 0x10 || 0x4 || uint32_t || ? ||  || 15 in samples
+|-
+| 0x14 || 0x4 || uint32_t || ? ||  || 15 in samples
+|-
+| 0x18 || 0x4 || uint32_t || ? ||  || 15 in samples
+|-
+| 0x1C || 0x4 || uint32_t || ? ||  || 15 in samples
+|-
+| 0x20 || 0x4 || uint32_t || ? ||  || 0x87 in samples
+|-
+| 0x24 || 0x4 || int32_t || ? ||  || -1 in samples
+|-
+| 0x28 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x2C || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x30 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x34 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x38 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x3C || 0x4 || uint32_t || ? ||  || 4 or 7 in samples
+|-
+| 0x40 || 0x4 || uint32_t || ? ||  || 0 or 1 in samples
+|-
+| 0x44 || 0x4 || uint32_t  || ? ||  || 0 or 0x80 in samples
+|-
+| 0x48 || 0x4 || uint32_t || ? || Reference count. Forced to 1 on load. || Seems to not be endian swapped when written to disk. 0x01000000 in samples
+|}
+
+=== renderengine::DepthStencilState ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || ? ||  || 3 in samples
+|-
+| 0x4 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x8 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0xC || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x10 || 0x4 || uint32_t || ? ||  || 7 in samples
+|-
+| 0x14 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x18 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x1C || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x20 || 0x4 || uint32_t || ? ||  || 7 in samples
+|-
+| 0x24 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x28 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x2C || 0x4 || int32_t || ? ||  || -1 in samples
+|-
+| 0x30 || 0x4 || int32_t || ? ||  || -1 in samples
+|-
+| 0x34 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x38 || 0x4 || int32_t || ? ||  || -1 in samples
+|-
+| 0x3C || 0x4 || int32_t || ? ||  || -1 in samples
+|-
+| 0x40 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x44 || 0x4 || uint32_t  || ? ||  || 1 in samples
+|-
+| 0x48 || 0x4 || uint32_t || ? ||  || 1 in samples
+|-
+| 0x4C || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x50 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x54 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x58 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x5C || 0x4 || uint32_t || ? || Reference count. Forced to 1 on load. || Seems to not be endian swapped when written to disk. 0x01000000 in samples
+|}
+
+=== renderengine::RasterizerState ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x4 || 0x4 || uint32_t || ? ||  || 2 in samples
+|-
+| 0x8 || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0xC || 0x4 || ? || ? ||  || 0 in samples
+|-
+| 0x10 || 0x4 || int32_t || ? ||  || -1 in samples
+|-
+| 0x14 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x18 || 0x4 || uint32_t || ? ||  || 1 in samples
+|-
+| 0x1C || 0x4 || ? || ? ||  || 0 in samples<br />Not initialized. Unused?
+|-
+| 0x20 || 0x4 || uint32_t || ? ||  || 1 in samples
+|-
+| 0x24 || 0x4 || uint32_t || ? ||  || 0 in samples
+|-
+| 0x28 || 0x4 || uint32_t || ? ||  || 1 in samples
+|-
+| 0x2C || 0x4 || uint32_t || ? ||  || 65535 in samples
+|-
+| 0x30 || 0x4 || uint32_t || ? || Reference count. Forced to 1 on load. || Seems to not be endian swapped when written to disk. 0x01000000 in samples
+|}

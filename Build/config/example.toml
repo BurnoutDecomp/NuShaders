@@ -1,0 +1,26 @@
+# Per-machine deploy config. Copy to Build/config/<hostname>.toml and fill in
+
+platform = "bpr"          # "bpr" or "x360"
+
+# The stock SHADERS bundle to extract, the scratch dir to extract into, 
+# and the repacked bundle to write
+og_bundle     = "Reference/BPR/SHADERS.BUNDLE"
+extracted_dir = "Output/PC_BPR/SHADERS_scratch"
+new_bundle    = "Output/PC_BPR/SHADERS.BUNDLE"
+
+# What gets injected. Defaults match the build outputs for the platform above
+# spb_source    = "Build/Output/PC_BPR/ShaderProgramBuffer"
+# shader_source = ""      # optional shader resources
+
+launch_args = "-skipvideos"
+
+[bpr]
+# The install's bundle is backed up before the first overwrite
+game_bundle = "C:/Program Files (x86)/Steam/steamapps/common/BurnoutPR/Media/Vehicles/SHADERS.BUNDLE"
+game_exe    = "C:/Program Files (x86)/Steam/steamapps/common/BurnoutPR/BurnoutPR.exe"
+
+[x360]
+# These settings are for if you're using xbdm/neighborhood
+ip        = "192.168.1.50"
+game_path = 'DEVKIT:\Burnout_tcartwright'
+xex       = "BURNOUT_X360_ARTIST.XEX"

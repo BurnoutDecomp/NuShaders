@@ -1,0 +1,277 @@
+{{ParadiseResourceTypeInfobox
+| name = Material
+| othernames = RwMaterial and MaterialAssembly
+| id = 0x1
+| category = Generic
+| memdist = Main Memory only
+| imports = [[Material Technique]]<br />[[Shader]]<br />[[Material State]]<br />[[Texture State]]
+| importedby = [[Renderable]]
+}}
+
+{{subpage|Development|text=Information on versions of the Material resource type used during development.}}
+
+{{todo|Write an overview/description of the resource type.}}
+
+= Structures =
+=== CgsGraphics::MaterialAssembly ===
+==== PlayStation 3, Xbox 360 ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || [[Material Technique|MaterialTechnique]]** || mappMaterials || Materials || Imported resources
+|-
+| 0x4 || 0x4 || uint32_t || muNameHash || Resource name hash || 
+|-
+| 0x8 || 0x1 || uint8_t || mu8NumMaterials || Number of materials || 
+|-
+| 0x9 || 0x1 || int8_t || mi8NumSamplers || Number of samplers || 
+|-
+| 0xA || 0x1 || int8_t || mi8NumInternalSamplers || Number of internal samplers || 
+|-
+| 0xB || 0x1 || int8_t || mi8NumExternalSamplers || Number of external samplers || 
+|-
+| 0xC || 0x4 || [[#CgsGraphics::Sampler|Sampler]]* || mpaSamplers || Samplers || 
+|-
+| 0x10 || 0x4 || [[#ShaderConstantsInternal|ShaderConstantsInternal]]* || mpVertexShaderConstants || Vertex shader constants || 
+|-
+| 0x14 || 0x4 || [[#ShaderConstantsInternal|ShaderConstantsInternal]]* || mpPixelShaderConstants || Pixel shader constants || 
+|-
+| 0x18 || 0x4 || ShaderConstantsCPU* || mpCPUShaderConstants || CPU shader constants || Set at runtime
+|}
+
+==== PC, PC (Remastered) ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || [[#Unknown|Unknown]]* || mappMaterials || Materials || 
+|-
+| 0x4 || 0x4 || uint32_t || muNameHash || Resource name hash || 
+|-
+| 0x8 || 0x1 || uint8_t || mu8NumMaterials || Number of materials || 
+|-
+| 0x9 || 0x1 || int8_t || mi8NumSamplers || Number of samplers || 
+|-
+| 0xA || 0x1 || int8_t || mi8NumInternalSamplers || Number of internal samplers || 
+|-
+| 0xB || 0x1 || int8_t || mi8NumExternalSamplers || Number of external samplers || 
+|-
+| 0xC || 0x4 || [[#CgsGraphics::Sampler|Sampler]]* || mpaSamplers || Samplers || 
+|-
+| 0x10 || 0x4 || [[Shader]]* || ? || Shader || Imported resource
+|-
+| 0x14 || 0x4 || [[#ShaderConstantsInternal|ShaderConstantsInternal]]* || mpVertexShaderConstants || Vertex shader constants || 
+|-
+| 0x18 || 0x4 || [[#ShaderConstantsInternal|ShaderConstantsInternal]]* || mpPixelShaderConstants || Pixel shader constants || 
+|-
+| 0x1C || 0x4 || ShaderConstantsCPU* || mpCPUShaderConstants || CPU shader constants || Set at runtime<br />Possibly at 0x20 instead
+|-
+| 0x20 || 0x4 || ?* || ? ||  || Set at runtime
+|}
+
+==== PlayStation 4, Switch ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x8 || [[#Unknown|Unknown]]* || mappMaterials || Materials || 
+|-
+| 0x8 || 0x4 || uint32_t || muNameHash || Resource name hash || 
+|-
+| 0xC || 0x1 || uint8_t || mu8NumMaterials || Number of materials || 
+|-
+| 0xD || 0x1 || int8_t || mi8NumSamplers || Number of samplers || 
+|-
+| 0xE || 0x1 || int8_t || mi8NumInternalSamplers || Number of internal samplers || 
+|-
+| 0xF || 0x1 || int8_t || mi8NumExternalSamplers || Number of external samplers || 
+|-
+| 0x10 || 0x8 || [[#CgsGraphics::Sampler|Sampler]]* || mpaSamplers || Samplers || 
+|-
+| 0x18 || 0x8 || [[Shader]]* || ? || Shader || Imported resource
+|-
+| 0x20 || 0x8 || [[#ShaderConstantsInternal|ShaderConstantsInternal]]* || mpVertexShaderConstants || Vertex shader constants || 
+|-
+| 0x28 || 0x8 || [[#ShaderConstantsInternal|ShaderConstantsInternal]]* || mpPixelShaderConstants || Pixel shader constants || 
+|-
+| 0x30 || 0x8 || ShaderConstantsCPU* || mpCPUShaderConstants || CPU shader constants || Set at runtime<br />Possibly at 0x38 instead
+|-
+| 0x38 || 0x8 || ?* || ? ||  || Set at runtime
+|}
+
+=== Unknown ===
+This structure does not exist on PS3/X360. It appears to replace their use of the MaterialTechnique resource type.
+
+==== PC, PC (Remastered) ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || [[Material State|MaterialState]]* || ? || Material state || Imported resource
+|-
+| 0x4 || 0x4 || uint32_t || ? || Flags? || Possibly multiple fields
+|-
+| 0x8 || 0x4 || ?* || ? || String start? || Data pointed to is uninitialized (0xCD)
+|-
+| 0xC || 0x4 || uint32_t || ? ||  || 
+|-
+| 0x10 || 0x4 || uint32_t || ? ||  || 
+|-
+| 0x14 || 0x4 || ?* || ? || String end? || Data pointed to is uninitialized (0xCD)
+|-
+| 0x18 || 0x4 || ?* || ? ||  || Set at runtime
+|-
+| 0x1C || 0x4 || ?* || ? ||  || Set at runtime
+|}
+
+==== PlayStation 4, Switch ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x8 || [[Material State|MaterialState]]* || ? || Material state || Imported resource
+|-
+| 0x8 || 0x4 || uint32_t || ? || Flags? || Possibly multiple fields
+|-
+| 0xC || 0x4 ||  ||  || Padding || 
+|-
+| 0x10 || 0x8 || ?* || ? || String start? || Data pointed to is uninitialized (0xCD)
+|-
+| 0x18 || 0x4 || uint32_t || ? ||  || 
+|-
+| 0x1C || 0x4 || uint32_t || ? ||  || 
+|-
+| 0x20 || 0x8 || ?* || ? || String end? || Data pointed to is uninitialized (0xCD)
+|-
+| 0x28 || 0x8 || ?* || ? ||  || Set at runtime
+|-
+| 0x30 || 0x8 || ?* || ? ||  || Set at runtime
+|}
+
+=== CgsGraphics::Sampler ===
+==== 32-bit ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || char* || purpose || Purpose string || 
+|-
+| 0x4 || 0x4 || uint32_t || id || ID hash || Unknown source string
+|-
+| 0x8 || 0x2 || int16_t || channel ||  || 
+|-
+| 0xA || 0x2 || int16_t || scope ||  || 
+|-
+| 0xC || 0x4 || [[#CgsGraphics::TexturePurpose|TexturePurpose]] || ePurpose || Texture purpose || 
+|-
+| 0x10 || 0x4 || [[Texture State|TextureState]]* || state || Texture state || Imported resource
+|}
+
+==== 64-bit ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x8 || char* || purpose || Purpose string || 
+|-
+| 0x8 || 0x4 || uint32_t || id || ID hash || Unknown source string
+|-
+| 0xC || 0x2 || int16_t || channel ||  || 
+|-
+| 0xE || 0x2 || int16_t || scope ||  || 
+|-
+| 0x10 || 0x8 || [[#CgsGraphics::TexturePurpose|TexturePurpose]] || ePurpose || Texture purpose || 
+|-
+| 0x18 || 0x8 || [[Texture State|TextureState]]* || state || Texture state || Imported resource
+|}
+
+=== ShaderConstantsInternal ===
+==== PlayStation 3, Xbox 360 ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || muNumConstantsInstances || Number of instances || 
+|-
+| 0x4 || 0x4 || uint32_t* || mpauConstantsInstanceSize || Instance sizes || 1 = 0x10 bytes
+|-
+| 0x8 || 0x4 || uint32_t** || mppaConstantsInstanceData || Instance data || float[4]
+|-
+| 0xC || 0x4 || uint32_t* || mpauNamesHash || Instance names || Hashes map to [[Shader_Technique#CgsGraphics::ShaderConstantHashTable|ShaderConstantHashTable]] in imported shader technique (via imported material technique)
+|-
+| 0x10 || 0x4 || [[#renderengine::ProgramVariableHandle|ProgramVariableHandle]]* || mpaProgramStateHandles || Instance handles || 
+|}
+
+==== PC, PC (Remastered) ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || muNumConstantsInstances || Number of instances || 
+|-
+| 0x4 || 0x4 || uint32_t* || mpauConstantsInstanceSize || Instance sizes || 1 = 0x10 bytes
+|-
+| 0x8 || 0x4 || uint32_t** || mppaConstantsInstanceData || Instance data || float[4]
+|-
+| 0xC || 0x4 || uint32_t* || mpauNamesHash || Instance names || JAMCRC. Original constant names can be found in the imported [[Shader]] resource
+|}
+
+==== PlayStation 4, Switch ====
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || uint32_t || muNumConstantsInstances || Number of instances || 
+|-
+| 0x4 || 0x4 ||  ||  || Padding || 
+|-
+| 0x8 || 0x8 || uint32_t* || mpauConstantsInstanceSize || Instance sizes || 1 = 0x10 bytes
+|-
+| 0x10 || 0x8 || uint32_t** || mppaConstantsInstanceData || Instance data || float[4]
+|-
+| 0x18 || 0x8 || uint32_t* || mpauNamesHash || Instance names || JAMCRC. Original constant names can be found in the imported [[Shader]] resource
+|}
+
+=== renderengine::ProgramVariableHandle ===
+{| class="wikitable"
+! Offset !! Length !! Type !! Name !! Description !! Comments
+|-
+| 0x0 || 0x4 || ProgramBuffer* || m_programBuffer ||  || Set at runtime
+|-
+| 0x4 || 0x2 || uint16_t || m_index || Index || 
+|-
+| 0x6 || 0x1 || uint8_t || m_numConstants || Number of constants || 
+|-
+| 0x7 || 0x1 || uint8_t || m_dataFlags || Flags || See [[#ProgramVariableHandle flags|flags]]
+|}
+
+= Enumerations =
+=== CgsGraphics::TexturePurpose ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| E_TEXTURE_PURPOSE_INVALID || -1 || 
+|-
+| E_TEXTURE_PURPOSE_NONE || 0 || 
+|-
+| E_TEXTURE_PURPOSE_AMBIENT_OCCLUSION_MAP || 1 || 
+|-
+| E_TEXTURE_PURPOSE_SHADOW_MAP_0 || 2 || 
+|-
+| E_TEXTURE_PURPOSE_GLASS_FRACTURE_PERSISTENT || 3 || 
+|-
+| E_TEXTURE_PURPOSE_ENVIRONMENT_MAP || 4 || 
+|-
+| E_TEXTURE_PURPOSE_GLASS_FRACTURE || 5 || 
+|-
+| E_TEXTURE_PURPOSE_SHADOW_MAP_ANISO || 6 || 
+|-
+| E_MAX_TEXTURE_PURPOSES || 7 || 
+|}
+
+=== ProgramVariableHandle flags ===
+{| class="wikitable"
+! Name !! Value !! Comments
+|-
+| FLAGS_FLOAT || 0x1 || Always set?
+|-
+| FLAGS_SAMPLER || 0x2 || 
+|-
+| FLAGS_BOOL || 0x4 || 
+|-
+| FLAGS_VERTEXPROGRAM || 0x80 || 
+|-
+|}
+
+The lower 3 bits form the data type (FLAGS_DATATYPEMASK = 7).
