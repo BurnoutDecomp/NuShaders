@@ -13,6 +13,7 @@ from . import context, proc
 
 _EPILOG = """\
 common flows:
+  nushaders.py reference status            fresh clone: which stock bundles you still need
   nushaders.py doctor all                  what is installed, what is missing, how to fix it
   nushaders.py tools build-cli             build nushaders.exe (NuShaders.CLI)
   nushaders.py tools test-cli              run the C# format round-trip tests
@@ -98,6 +99,19 @@ def build_parser():
     c = _sub(verbs, "clean", "remove build outputs and the cache")
     c.add_argument("platform", nargs="?", choices=targets.NAMES)
     c.set_defaults(_handler=_handle_clean)
+
+    # --- reference (first-time setup) ----------------------------------------
+    rf = _sub(verbs, "reference", "get the stock shader bundles into Reference/")
+    rf_sub = rf.add_subparsers(dest="reference_action", metavar="ACTION")
+    rs = rf_sub.add_parser("status", help="which reference corpora are present")
+    _add_global_flags(rs)
+    ri = rf_sub.add_parser("import", help="unpack a SHADERS bundle into the right place")
+    _add_global_flags(ri)
+    ri.add_argument("bundle", help="path to a SHADERS.bndl / SHADERS.BUNDLE")
+    ri.add_argument("--version", choices=context.X360_VERSIONS,
+                    help="which X360 game build this is (required for X360)")
+    ri.add_argument("--force", action="store_true", help="replace an existing corpus")
+    rf.set_defaults(_handler=_handle_reference)
 
     # --- bundle / deploy / autotest / config ---------------------------------
     bn = _sub(verbs, "bundle", "extract the stock bundle, inject our resources, repack")
@@ -225,6 +239,18 @@ def _handle_clean(args):
     return compile_mod.clean(args.platform)
 
 
+def _handle_reference(args):
+    from . import reference
+
+    action = getattr(args, "reference_action", None)
+    if not action:
+        raise proc.StepError("reference needs an action",
+                             fix="try: nushaders.py reference status")
+    if action == "status":
+        return reference.status()
+    return reference.import_bundle(args.bundle, args.version, args.force)
+
+
 def _handle_bundle(args):
     from . import bundle, config
 
@@ -322,7 +348,8 @@ def main(argv):
     )
 
     label = args.verb
-    for extra in ("role", "platform", "config_action", "manifest_action", "tools_action"):
+    for extra in ("role", "platform", "reference_action", "config_action",
+              "manifest_action", "tools_action"):
         value = getattr(args, extra, None)
         if value:
             label = "%s %s" % (args.verb, value)

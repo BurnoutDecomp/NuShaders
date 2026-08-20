@@ -16,10 +16,6 @@ PATHS = (
      "expected Source/Bundle/gamedb/burnout5/Shaders — is the repo checked out fully?"),
     ("shader includes", context.INCLUDE_DIR, ("x360", "bpr", "pc"),
      "expected Source/Bundle/gamedb/burnout5/Include"),
-    ("BPR reference bundle", context.BPR_REF, ("bpr",),
-     "extract the stock BPR SHADERS bundle to Reference/BPR/SHADERS (yap e)"),
-    ("X360 reference bundle", context.X360_REF_DEFAULT, ("x360",),
-     "extract the stock X360 SHADERS.bndl to Reference/360/Shaders/Breaker/SHADERS (gitignored)"),
     ("ResourceDB.json", context.RESOURCE_DB, ("x360",),
      "Reference/ResourceDB.json is required to map unnamed X360 resource IDs"),
 )
@@ -60,6 +56,34 @@ def _check_role(role):
     return ok, misses
 
 
+def _check_corpus(role):
+    """The reference bundle this role needs, via the same check `reference status` uses.
+
+    A fresh clone has the BPR corpus (it is committed) but no X360 one, so this
+    is the first thing an X360 contributor will hit. Point them at the verb that
+    fixes it rather than at a directory path.
+    """
+    from . import reference
+
+    wanted = {"bpr": ("bpr", None), "x360": ("x360", "Breaker")}.get(role)
+    if not wanted:
+        return []
+    platform, version = wanted
+    for corpus in reference.corpora():
+        if corpus.platform != platform or corpus.version != version:
+            continue
+        present, detail = reference._state(corpus)
+        label = corpus.label + " corpus"
+        if present:
+            proc.info("ok   %-21s %s" % (label, detail))
+            return []
+        proc.info("MISS %-21s %s" % (label, detail))
+        proc.fix("unpack the stock bundle: nushaders.py reference import <bundle>%s"
+                 % (" --version Breaker" if platform == "x360" else ""))
+        return [label]
+    return []
+
+
 def _check_manifest(platform):
     """Manifests are committed, so a miss here is a repo problem, not a machine one."""
     path = os.path.join(context.MANIFEST_DIR, platform + ".json")
@@ -91,6 +115,7 @@ def run(role="all"):
         _ok, misses = _check_role(r)
         all_misses += misses
         if r in ("x360", "bpr"):
+            all_misses += _check_corpus(r)
             all_misses += _check_manifest(r)
         if r == "deploy":
             all_misses += _check_config()

@@ -4,11 +4,47 @@ Custom shaders for Burnout Paradise.
 
 ## Quick start
 
-```
+```bash
 python nushaders.py doctor all        # what is installed, what is missing, how to fix it
 python nushaders.py tools build-cli   # build nushaders.exe (the C# format tool)
 python nushaders.py build bpr         # compile + pack for Remastered PC
 python nushaders.py verify bpr        # verify if the packer still reproduces correct bytes
+```
+
+## First-time setup
+
+Before doing anything, run this command:
+
+```
+python nushaders.py reference status     # what is present, what is missing, what needs it
+```
+
+Supply these versions of `SHADERS.BNDL` yourself:
+### To compile for Remastered
+- Just the `SHADERS.BNDL` found in your game install folder
+### To compile for Xbox 360
+- Burnout_tcartwright 'Breaker Island' build
+- 1.6 'Free Feburary' Content Update
+- 1.8 'Cops n Robbers' Content Update
+
+Then, import the reference bundles:
+```bash
+python nushaders.py reference import "D:/dumps/SHADERS.BNDL" --version Breaker
+# or alternatively, let the tool auto-detect the Remastered version
+python nushaders.py reference import "D:/dumps/SHADERS.BNDL"
+# then regenerate the manifest for your desired platform
+python nushaders.py manifest regen --platform x360
+```
+
+`reference import` uses YAP to unpack the bundles into their respective directories.
+
+Note: For Xbox 360, only `Breaker` has a resource string table. 
+`manifest regen` will only work when that version of SHADERS.BNDL is provided.
+
+Then check the toolchain:
+
+```bash
+python nushaders.py doctor all
 ```
 
 ## Layout
@@ -42,7 +78,7 @@ compiles all variants to ensure they properly compile, but don't work ingame.
 
 ## Examples
 
-```
+```bash
 # compile one shader
 python nushaders.py build bpr --filter "Specular_1Bit_Doublesided.fx"
 
@@ -73,7 +109,7 @@ touching anything.
 the game expects, derived from the stock bundle's `.debug.xml` plus
 `Reference/ResourceDB.json`.
 
-```
+```bash
 python nushaders.py manifest regen     # re-derive and write
 python nushaders.py manifest check     # re-derive and diff; non-zero on drift
 ```
