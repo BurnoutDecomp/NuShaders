@@ -56,6 +56,12 @@ X360 = Platform(
         Variant("mrt", ("D_MRT",)),
         Variant("mrt_msaa", ("D_MRT", "D_MSAA_ENABLED")),
         Variant("mrt_msaa_aniso", ("D_MRT", "D_MSAA_ENABLED", "D_SHADOWMAP_ANISOTROPIC")),
+        # D_ROAD_X360: console-authentic road/tunnel shading, reverse engineered
+        # from the retail Breaker SHADERS.BNDL microcode (lerp light combine,
+        # real anisotropic 3CSM shadow filter, no road normal maps, x2 lightmap
+        # white level; see scratch/x360_road_shaders/*/REPORT.md in the parent
+        # workspace). No D_MRT: the shipped X360 road resources are single-target.
+        Variant("x360roads", ("D_ROAD_X360", "D_SHADOWMAP_ANISOTROPIC")),
         # No D_SOFT_SHADOWS here: soft shadows were never an option on Xbox 360.
         # compile_xbox360.ps1 carried mrt_soft and mrt_msaa_soft anyway, and they
         # failed with X3551 microcode validation on the heaviest pixel shaders
@@ -97,7 +103,9 @@ PC_TUB = Platform(
     extra_args=(),
     # D_SOFT_SHADOWS belongs here and nowhere else: Shadow.fxh's BPR branch says
     # explicitly not to define it, and the Xenos compiler rejects it.
-    variants=(Variant("base", ()), Variant("soft", ("D_SOFT_SHADOWS",))),
+    # x360roads = compile check for the console-authentic road shading (D_ROAD_X360).
+    variants=(Variant("base", ()), Variant("soft", ("D_SOFT_SHADOWS",)),
+              Variant("x360roads", ("D_ROAD_X360",))),
     out_root=_out("PC_TUB"),
     spb_dir=None,
     unmatched_dir=None,

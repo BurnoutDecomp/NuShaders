@@ -76,6 +76,40 @@ python nushaders.py doctor all
 ShaderProgramBuffer resources. `build <platform> --effects --all-variants`
 compiles all variants to ensure they properly compile, but don't work ingame.
 
+## D_ROAD_X360 — console-authentic road shading
+
+The road/tunnel `.fx` source in this repo is Criterion's later PC revision; the
+shipped Xbox 360 game used different math, so roads render wrong when the PC
+source is compiled as-is. `-D D_ROAD_X360` (or the `x360roads` variant on the
+`x360` / `pc-tub` targets) switches the six road-family shaders —
+`Road_Detailmap_*`, both `DriveableSurface_*`, and the three `Tunnel_*` road
+variants — to the behaviour reverse engineered from the retail Breaker
+`SHADERS.BNDL` microcode:
+
+- light combine is `lerp(indirect, KeyLightColour, factor)` instead of
+  `indirect + KeyLightColour*factor` (the PC add double-counts ambient in
+  sun — the biggest visual difference);
+- `CalcShadowFactor3CSM_X360_Aniso` gets its real decompiled body (2-point
+  anisotropic PCF with a cascade-seam guard and a 0.75-texel kernel floor)
+  instead of stubbing to a single `tex2Dproj`; open-road shaders
+  (`SHADOW_APPLY_FADE_ROAD`) settle at `ShadowMap_Constants2.y` beyond the
+  fade distance, tunnels fade to zero;
+- `Road`/`Tunnel_Road` drop the tangent-space road normal mapping (the console
+  shipped the `D_DISABLE_ROAD_SHADER` branch, no s3/s4, no tangent
+  interpolator) and use the interpolated vertex N·L;
+- `DriveableSurface_DetailMap_Diffuse` drops the Oren-Nayar path;
+- `Tunnel_Lightmapped_*2` uses a hard-coded `lightmap * 2` white level;
+- road/tunnel shaders write the direct-light factor to dest alpha.
+
+Only shaders that opt in (`SHADOW_ROAD_X360_USER`) are affected; every other
+shader compiles byte-identically with or without the flag. Per-shader evidence
+lives in `scratch/x360_road_shaders/*/REPORT.md` in the parent workspace.
+
+```bash
+python nushaders.py build pc-tub --variant x360roads   # compile check
+python nushaders.py build x360 -D D_ROAD_X360          # console-authentic roads
+```
+
 ## Examples
 
 ```bash
