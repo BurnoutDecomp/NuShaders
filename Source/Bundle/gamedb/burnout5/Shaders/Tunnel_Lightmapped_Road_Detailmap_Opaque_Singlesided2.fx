@@ -1,4 +1,5 @@
 #include "../Include/Transform.fxh"
+#define SHADOW_ROAD_X360_USER
 #include "../Include/Shadow.fxh"
 #include "../Include/Fog.fxh"
 #include "../Include/Irradiance.fxh"
@@ -239,8 +240,14 @@ float4 PS_Main( vertexOutput IN ) : COLOR
  float3 baseT    = tex2D(baseMapSampler, lBaseAndLMUV.xy) * (float3)materialDiffuse;
  float3 lines    = tex2D(lineMapSampler, lDetailAndLineUV.zw).rgb;
  float3 lightmapTexture = tex2D( LightmapTextureSampler, lBaseAndLMUV.zw ).rgb;
+#ifdef D_ROAD_X360
+    // X360 (PS E9A93A7A): the lightmap white level is a hard-coded x2 --
+    // FogColourPlusWhiteLevel.w is never read in the console PS.
+ lightmapTexture *= 2.0f;
+#else
     float lf2xWhiteLevel = (float)FogColourPlusWhiteLevel.w + (float)FogColourPlusWhiteLevel.w;
  lightmapTexture *= lf2xWhiteLevel;
+#endif
  float  lineDetail = lerp( float(1.0), detailsT, (float)lineDetailControl );
  lines *= lineDetail;
  float3 asphalt = baseT * detailsT;
@@ -261,16 +268,32 @@ float4 PS_Main( vertexOutput IN ) : COLOR
     float  lDirectLightFactor   = saturate( (float)IN.IndirectColourAndKey.w ) * lShadowModulation;
     float3 lDirectLightColour   = float3( KeyLightColour );
     float3 lIndirectLightColour = float3( IN.IndirectColourAndKey.xyz );
+#ifdef D_ROAD_X360
+    // X360: cross-fade indirect -> key light (the PC add double-counts ambient in sun)
+    float3 lLightColour         = lerp( lIndirectLightColour, lDirectLightColour, lDirectLightFactor );
+#else
     float3 lLightColour         = ( lIndirectLightColour + lDirectLightColour * lDirectLightFactor );
+#endif
     float3 lLightOrLightmap     = max( lLightColour, lightmapTexture );
     float3 lFinalColour         = (diffuseTexture * lLightOrLightmap) + (lSpecularColour * lShadowModulation);
     lFinalColour = lerp( lFinalColour, float3(FogColourPlusWhiteLevel.rgb), float(IN.ReflectionVectorAndFog.w) );
+#ifdef D_ROAD_X360
+    // X360 writes the direct-light factor to dest alpha, not 1
+#ifdef D_MRT
+    oColour0 = float4(lFinalColour, lDirectLightFactor);
+    float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
+    oColour1 = ConvertDepthToARGB( lfDepth );
+#else
+    return float4(lFinalColour, lDirectLightFactor);
+#endif
+#else
 #ifdef D_MRT
     oColour0 = float4(lFinalColour, 1);
     float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
     oColour1 = ConvertDepthToARGB( lfDepth );
 #else
     return float4(lFinalColour, 1);
+#endif
 #endif
 }
 technique Default

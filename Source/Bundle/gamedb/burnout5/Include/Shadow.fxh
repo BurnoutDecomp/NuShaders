@@ -3,6 +3,14 @@
 
 #include "../Include/Transform.fxh"
 
+// D_ROAD_X360 (build option) restores the console-authentic shadow filter, but
+// ONLY in shaders that opt in with SHADOW_ROAD_X360_USER before including this
+// header (the six road/tunnel shaders whose microcode it was recovered from).
+// Everything else keeps the stock TUB-PC behaviour even when the flag is set.
+#if defined(D_ROAD_X360) && defined(SHADOW_ROAD_X360_USER)
+#define SHADOW_X360_ROADS_ACTIVE
+#endif
+
 #ifndef USE_SHARED_GLOBALS
 #ifdef D_PLATFORM_X360
 float4x4 ShadowMap_WorldToLight[3] : register(c4)
@@ -97,7 +105,12 @@ sampler2D shadowMapSamplerHighDetail : register(s15)
     #define CALC_SHADOW_FACTOR_3( NDotL )                                 CalcShadowFactor3CSM( IN.LightSpacePos0, IN.LightSpacePos1, NDotL )
 #endif
 #else
+#ifdef SHADOW_X360_ROADS_ACTIVE
+    // D_ROAD_X360: use the reconstructed console shadow filter on non-X360 targets too
+    #define CALC_SHADOW_FACTOR_3( NDotL )                                 CalcShadowFactor3CSM_X360_Aniso( IN.LightSpacePos0, IN.LightSpacePos1, NDotL )
+#else
     #define CALC_SHADOW_FACTOR_3( NDotL )                                 CalcShadowFactor3CSM( IN.LightSpacePos0, IN.LightSpacePos1, NDotL )
+#endif
 #endif
 #if defined(D_HACK_FORCE_3CSM)
     #define SHADOWMAP_INTERPOLATORS( semantic0, semantic1, semantic2 ) \
@@ -221,7 +234,7 @@ GetShadowMapPositions3CSM(
     out float4 texCoord0,
     out float4 texCoord1 )
 {
-#ifdef D_PLATFORM_BPR
+#if defined(D_PLATFORM_BPR) && !defined(SHADOW_X360_ROADS_ACTIVE)
     // BPR does the cascade transform + PCF in the pixel shader (matches the
     // Remastered Specular_1Bit), so just carry world position + eyeZ.
     texCoord0 = float4( positionWorld, eyeZ );
@@ -232,7 +245,10 @@ GetShadowMapPositions3CSM(
     float3 position2 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[2] ).xyz;
     texCoord0 = float4( position0, eyeZ );
     texCoord1 = float4( position1.xy, position2.xy );
+#ifndef SHADOW_X360_ROADS_ACTIVE
+    // PC-only keep-alive hack; absent from the console VS (it perturbs the VS CTAB)
     texCoord1.x += ShadowMap_Constants2.x * 1e-30;
+#endif
 #endif
 }
 
@@ -339,8 +355,80 @@ CalcShadowFactor3CSM(
 #endif
 }
 
-#ifdef D_PLATFORM_X360
+#if defined(D_PLATFORM_X360) || defined(SHADOW_X360_ROADS_ACTIVE)
 // X360 anisotropic variant, which got culled when the source was preprocessed for TUB PC
+#ifdef SHADOW_X360_ROADS_ACTIVE
+// Reconstructed from the retail X360 (Breaker) road/tunnel pixel shader microcode
+// (resources E357DCFD / 245284A8 / F59D9209 / 89C8D9A5 / 1A2FE055 / E9A93A7A):
+//  - two sample points at tc +/- 0.25 * (ddx(tc) + ddy(tc)), each a bilinear
+//    2x2 PCF with the depth compare done against cascade 0's z, no depth bias.
+//    (The microcode reconstructs the bilinear PCF manually -- 4 point fetches
+//    at +/-0.5 texel plus getWeights -- because Xenos has no compare sampler;
+//    one hardware-compare bilinear tap per point computes the same thing.)
+//  - the footprint falls back to a fixed 0.75-texel kernel when smaller than
+//    ~1 texel (console literals: scale (640, 960), fallback
+//    (0.001171875, 0.00078125) = 0.75 / (640, 960)).
+//  - the anisotropic offset collapses to zero on quads that straddle a
+//    cascade seam (screen-space gradients of the cascade selectors).
+//  - tail: open-road shaders (SHADOW_APPLY_FADE_ROAD) settle at
+//    ShadowMap_Constants2.y beyond the fade distance; tunnel shaders fade the
+//    whole direct term to zero. The NDotL cutoff matches the stock formula
+//    (call sites passing a literal 1.0 fold it away, exactly as the microcode
+//    shows for the two plain DriveableSurface shaders).
+#ifndef D_ROAD_X360_SHADOW_TEXELS
+#define D_ROAD_X360_SHADOW_TEXELS float2( 640.0, 960.0 )
+#endif
+
+float CalcShadowCompareTap_X360Aniso( float2 uv, float z )
+{
+#ifdef D_PLATFORM_BPR
+    return shadowMapSamplerHighDetailTexture.SampleCmpLevelZero( shadowMapSamplerHighDetail, uv, z );
+#else
+    return tex2Dproj( shadowMapSamplerHighDetail, float4( uv, z, 1.0 ) ).r;
+#endif
+}
+
+float
+CalcShadowFactor3CSM_X360_Aniso(
+ in float4   lLightSpacePosPacked0,
+    in float4   lLightSpacePosPacked1,
+    in float     NDotL )
+{
+    float  eyeZ = lLightSpacePosPacked0.w;
+    float2 sel  = float2( ( eyeZ < ShadowMap_Constants.y ) ? 1.0 : 0.0,
+                          ( eyeZ < ShadowMap_Constants.x ) ? 1.0 : 0.0 );
+    float2 tc12 = ( sel.x > 0.0 ) ? lLightSpacePosPacked1.xy : lLightSpacePosPacked1.zw;
+    float2 tc   = ( sel.y > 0.0 ) ? lLightSpacePosPacked0.xy : tc12;
+    float  tcz  = lLightSpacePosPacked0.z;   // always cascade 0's depth
+
+    // collapse the kernel on quads that straddle a cascade seam
+    float  seam   = abs( ddx( sel.x ) ) + abs( ddy( sel.x ) )
+                  + abs( ddx( sel.y ) ) + abs( ddy( sel.y ) );
+    float  spread = ( seam > 0.0 ) ? 0.0 : 0.25;
+
+    // anisotropic footprint; fixed 0.75-texel kernel when under ~1 texel
+    float2 dir = ddx( tc ) + ddy( tc );
+    if ( dot( abs( dir ), D_ROAD_X360_SHADOW_TEXELS ) < 1.0 )
+        dir = 0.75 / D_ROAD_X360_SHADOW_TEXELS;
+
+    float2 off    = spread * dir;
+    float  factor = 0.5 * ( CalcShadowCompareTap_X360Aniso( tc + off, tcz )
+                          + CalcShadowCompareTap_X360Aniso( tc - off, tcz ) );
+
+    float cutoffFactor = saturate( ( NDotL - 0.25 ) * 20.0 );
+    float fadeValue    = saturate( (float)ShadowMap_Constants.w - eyeZ * (float)ShadowMap_Constants2.w );
+#ifdef SHADOW_APPLY_FADE_ROAD
+    // open-road: beyond the fade distance the shadow settles at ShadowMap_Constants2.y
+    // (this constant is referenced nowhere else in the TUB-PC preprocessed tree --
+    // selecting it is evidently what SHADOW_APPLY_FADE_ROAD was for)
+    return saturate( factor * cutoffFactor ) * fadeValue
+         + ( 1.0 - fadeValue ) * (float)ShadowMap_Constants2.y;
+#else
+    // tunnel: fades the whole direct term to zero
+    return factor * cutoffFactor * fadeValue;
+#endif
+}
+#else
 // Currently we just call the standard 3CSM until we decompile the 360 version of the function
 float
 CalcShadowFactor3CSM_X360_Aniso(
@@ -350,6 +438,7 @@ CalcShadowFactor3CSM_X360_Aniso(
 {
     return CalcShadowFactor3CSM( lLightSpacePosPacked0, lLightSpacePosPacked1, NDotL );
 }
+#endif
 #endif
 
 float

@@ -3,6 +3,13 @@
 #include "../Include/NormalMapping.fxh"
 #include "../Include/Transform.fxh"
 #define SHADOW_APPLY_FADE_ROAD
+// D_ROAD_X360: the shipped X360 permutation (VS AC8E1657 / PS E357DCFD) has no
+// tangent-space road normal mapping at all -- it is the D_DISABLE_ROAD_SHADER
+// branch, with no worldTangent interpolator and no s3/s4 samplers.
+#if defined(D_ROAD_X360) && !defined(D_DISABLE_ROAD_SHADER)
+#define D_DISABLE_ROAD_SHADER
+#endif
+#define SHADOW_ROAD_X360_USER
 #include "../Include/Shadow.fxh"
 #include "../Include/Fog.fxh"
 #include "../Include/Irradiance.fxh"
@@ -85,6 +92,7 @@ texture2D baseMap
  string scope   = "material";
  string purpose = "none";
 >;
+#ifndef D_ROAD_X360
 texture2D NormalTexture
 <
     string scope = "material";
@@ -95,6 +103,7 @@ texture2D NormalDetailTexture
     string scope = "material";
  string purpose = "none";
 >;
+#endif
 sampler2D lineMapSampler : register(s0) 
 <
  string scope   = "material";
@@ -128,6 +137,7 @@ sampler2D baseMapSampler : register(s2)
  MagFilter = Linear;
  MipFilter = Linear;
 };
+#ifndef D_ROAD_X360
 sampler NormalTextureSampler : register(s3)
 <
     string scope = "material";
@@ -160,6 +170,7 @@ sampler NormalDetailTextureSampler : register(s4)
     MipFilter = Linear;
 #endif
 };
+#endif // !D_ROAD_X360
 struct vertexInput {
     float3 position    : POSITION;
     float3 normal    : NORMAL;
@@ -176,7 +187,9 @@ struct vertexOutput {
 #ifdef D_MRT
     float2 hPositionDepthCopy           : TEXCOORD7;
 #endif
+#ifndef D_ROAD_X360
     float3 worldTangent                 : TEXCOORD8;
+#endif
 };
 struct vertexOutputLod1 {
     float4 hPosition                    : POSITION;
@@ -206,8 +219,10 @@ vertexOutput VS_Main( vertexInput IN )
     OUT.WorldSpaceNormalAndFog.xyz = WorldSpaceNormal;
     OUT.WorldSpaceNormalAndFog.w = lFog;
     OUT.WorldSpaceViewDirection = lVertexToEye;
-    CALC_SHADOWMAP_INTERPOLATORS3( WorldSpacePosition, OUT.hPosition.w ); 
+    CALC_SHADOWMAP_INTERPOLATORS3( WorldSpacePosition, OUT.hPosition.w );
+#ifndef D_ROAD_X360
     OUT.worldTangent = normalize( mul( float3(1.0, 0.0, 0.0), (float3x3)world ) );
+#endif
     return OUT;
 }
 #ifdef D_MRT
@@ -265,13 +280,29 @@ void PS_Main( in  vertexOutput IN,
     float3 lSpecularColour = float3(KeyLightSpecularColour) * ( lhSpecularity * pow( lNdotH, lhSpecularPower ) );
     lSpecularColour      *= lhSpecMap;
     float  lShadowModulation    = CALC_SHADOW_FACTOR_3( (float)IN.IndirectColourAndKey.w );
+#ifdef D_ROAD_X360
+    // X360 (PS E357DCFD): the diffuse N.L is the interpolated vertex value --
+    // the microcode has no per-pixel dp3 against KeyLightDirection.
+    float  lDirectLightFactor   = saturate( (float)IN.IndirectColourAndKey.w * lShadowModulation );
+#else
     float  lDirectLightFactor   = saturate( (float)dot( lNormal, -KeyLightDirection ) * lShadowModulation );
+#endif
     float3 lDirectLightColour   = float3( KeyLightColour );
     float3 lIndirectLightColour = float3( IN.IndirectColourAndKey.xyz );
+#ifdef D_ROAD_X360
+    // X360: cross-fade indirect -> key light (the PC add double-counts ambient in sun)
+    float3 lLightColour         = lerp( lIndirectLightColour, lDirectLightColour, lDirectLightFactor );
+#else
     float3 lLightColour         = ( lIndirectLightColour + lDirectLightColour * lDirectLightFactor );
+#endif
     float3 lFinalColour         = (diffuseTexture * lLightColour) + (lSpecularColour * lShadowModulation);
     lFinalColour = lerp( lFinalColour, (float3)FogColourPlusWhiteLevel.rgb, float(IN.WorldSpaceNormalAndFog.w) );
+#ifdef D_ROAD_X360
+    // X360 writes the direct-light factor to dest alpha, not 1
+    oColour0 = float4(lFinalColour, lDirectLightFactor);
+#else
     oColour0 = float4(lFinalColour, 1);
+#endif
 #ifdef D_MRT
     float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
     oColour1 = ConvertDepthToARGB( lfDepth );

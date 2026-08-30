@@ -1,5 +1,6 @@
 #include "../Include/Transform.fxh"
 #define SHADOW_APPLY_FADE_ROAD
+#define SHADOW_ROAD_X360_USER
 #include "../Include/Shadow.fxh"
 #include "../Include/Fog.fxh"
 #include "../Include/Irradiance.fxh"
@@ -158,7 +159,12 @@ float4 PS_Main( vertexOutput IN ) : COLOR
     float  lDirectLightFactor   = saturate( (float)IN.IndirectColourAndKey.w ) * lShadowModulation;
     float3 lDirectLightColour   = float3( KeyLightColour );
     float3 lIndirectLightColour = float3( IN.IndirectColourAndKey.xyz );
+#ifdef D_ROAD_X360
+    // X360 (PS 245284A8): cross-fade indirect -> key light (the PC add double-counts ambient in sun)
+    float3 lLightColour         = lerp( lIndirectLightColour, lDirectLightColour, lDirectLightFactor );
+#else
     float3 lLightColour         = ( lIndirectLightColour + lDirectLightColour * lDirectLightFactor );
+#endif
     float3 lFinalColour         = (diffuseTexture * lLightColour) + (lSpecularColour * lShadowModulation);
     lFinalColour = lerp( lFinalColour, (float3)FogColourPlusWhiteLevel.rgb, float(IN.ReflectionVectorAndFog.w) );
 #ifdef D_MRT

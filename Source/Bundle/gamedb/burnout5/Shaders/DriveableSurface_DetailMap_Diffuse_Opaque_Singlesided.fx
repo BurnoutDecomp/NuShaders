@@ -1,5 +1,6 @@
 #include "../Include/Transform.fxh"
 #define SHADOW_APPLY_FADE_ROAD
+#define SHADOW_ROAD_X360_USER
 #include "../Include/Shadow.fxh"
 #include "../Include/Fog.fxh"
 #include "../Include/Irradiance.fxh"
@@ -95,7 +96,9 @@ struct vertexOutput {
 #ifdef D_MRT
     float2 hPositionDepthCopy       : TEXCOORD5;
 #endif
-#if defined(D_OREN_NAYAR) || defined(D_GGX_SPECULAR)
+#if (defined(D_OREN_NAYAR) || defined(D_GGX_SPECULAR)) && !defined(D_ROAD_X360)
+    // D_ROAD_X360: the shipped X360 permutation (VS 1648EA1C / PS F59D9209) has no
+    // Oren-Nayar path -- no WorldNormal/ViewDirection interpolators exist.
     float3 WorldNormal              : TEXCOORD6;
     float3 ViewDirection            : TEXCOORD7;
 #endif
@@ -123,7 +126,7 @@ vertexOutput VS_Main(vertexInput IN
     float3 lEyeToVertex    = ViewPosition.xyz - WorldSpacePosition;
     OUT.texCoordDiffuseAndFog.z = CalculateScattering( length( lEyeToVertex ) );
     CALC_SHADOWMAP_INTERPOLATORS3( WorldSpacePosition, OUT.hPosition.w );
-#if defined(D_OREN_NAYAR) || defined(D_GGX_SPECULAR)
+#if (defined(D_OREN_NAYAR) || defined(D_GGX_SPECULAR)) && !defined(D_ROAD_X360)
     OUT.WorldNormal = WorldSpaceNormal;
     OUT.ViewDirection = normalize( ViewPosition.xyz - WorldSpacePosition );
 #endif
@@ -151,14 +154,20 @@ float4 PS_Main( vertexOutput IN ) : COLOR
  detailsT *= (float)2.0;
  float3 diffuseTexture = baseT * detailsT;
  float lShadowModulation = CALC_SHADOW_FACTOR_3( (float)IN.IndirectColourAndKey.w );
-#ifdef D_OREN_NAYAR
+#if defined(D_OREN_NAYAR) && !defined(D_ROAD_X360)
     float  lDirectLightFactor   = ComputeOrenNayarDiffuse( normalize(IN.WorldNormal), (float3)-KeyLightDirection, normalize(IN.ViewDirection), 0.1 ) * lShadowModulation;
 #else
+    // X360 (PS F59D9209): plain saturate(vertex N.L) * shadow
     float  lDirectLightFactor   = saturate( (float)IN.IndirectColourAndKey.w ) * lShadowModulation;
 #endif
     float3 lDirectLightColour   = float3( KeyLightColour );
     float3 lIndirectLightColour = float3( IN.IndirectColourAndKey.xyz );
+#ifdef D_ROAD_X360
+    // X360 (PS F59D9209): cross-fade indirect -> key light (the PC add double-counts ambient in sun)
+    float3 lLightColour         = lerp( lIndirectLightColour, lDirectLightColour, lDirectLightFactor ) * float3(materialDiffuse.xyz);
+#else
     float3 lLightColour         = ( lIndirectLightColour + lDirectLightColour * lDirectLightFactor ) * float3(materialDiffuse.xyz);
+#endif
     float3 lFinalColour         = (diffuseTexture * lLightColour);
     lFinalColour = lerp( lFinalColour.rgb, float3(FogColourPlusWhiteLevel.rgb), float(IN.texCoordDiffuseAndFog.z) );
 #ifdef D_MRT
