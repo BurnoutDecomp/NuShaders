@@ -166,23 +166,12 @@ float4 PS_Main( vertexOutput IN ) : COLOR
 #endif
     float3 lFinalColour         = (diffuseTexture * lLightColour) + (lSpecularColour * lShadowModulation);
     lFinalColour = lerp( lFinalColour, (float3)FogColourPlusWhiteLevel.rgb, float(IN.ReflectionVectorAndFog.w) );
-#ifdef D_ROAD_X360
-    // X360 writes the direct-light factor to dest alpha, not 1
-#ifdef D_MRT
-    oColour0 = float4(lFinalColour, lDirectLightFactor);
-    float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
-    oColour1 = ConvertDepthToARGB( lfDepth );
-#else
-    return float4(lFinalColour, lDirectLightFactor);
-#endif
-#else
 #ifdef D_MRT
     oColour0 = float4(lFinalColour, 1);
     float lfDepth = ( IN.hPositionDepthCopy.x / IN.hPositionDepthCopy.y );
     oColour1 = ConvertDepthToARGB( lfDepth );
 #else
     return float4(lFinalColour, 1);
-#endif
 #endif
 }
 technique Default
