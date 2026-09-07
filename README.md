@@ -53,6 +53,10 @@ python nushaders.py doctor all
 |---|---|
 | `Source/Bundle/gamedb/burnout5/Shaders` | the shader source |
 | `Source/Bundle/gamedb/burnout5/Include` | shared shader headers |
+| `Source/Bundle/gamedb/burnout5/Playground` | test/skin shaders that ship at a `gamedb://` playground path |
+| `Source/Bundle/Fallback` | `fallback_world.fx`, the stand-in a bundle porter can substitute for a technique with no source (nothing needs it today) |
+| `Source/Executable` | Criterion's source for the shaders compiled **into the executable**, numbered by slot |
+| `Source/Executable/Recovered` | the same executable shaders decompiled from the X360 Xenos microcode — see that folder's README |
 | `Reference/` | where to place the extracted stock bundles, + format docs |
 | `Build/manifest/` | generated shader ↔ resource-id map |
 | `Build/config/` | per-machine deploy configs |

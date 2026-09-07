@@ -1,15 +1,26 @@
-// Godray_Additive_Doublesided.fx - decompiled instruction-for-instruction from the two X360
-// ShaderProgramBuffer resources the technique imports (VS 0xDFF4FAE8, PS 0x45ADE07A)
+// Godray_Additive_Doublesided.fx -- RECOVERED from the X360 SHADERS.BNDL microcode.
 //
 // The retail bundle's technique "Godray_Additive_Doublesided_Default" (ShaderTechnique
 // 0x81F53722, gamedb://burnout5/Playground/Test_Shaders/Godray_Additive_Doublesided.fx)
+// has NO source in the nushaders TUB HLSL tree, so convert_shaders_bundle.py used to
+// substitute fallback_world.fx for it.  That substitution is what fired
+//   "Tyring to postfixup a constant not present in the programbuffer"
+//   (CgsMaterialResourceType::PostFixUpShaderConstants, TRK_UNIT83/379/381/388_GR.bndl,
+//    material Godray01.Material?ID=667103):
+// the technique's PIXEL-stage INTERNAL constant list is {illuminance, materialDiffuse}
+// and the fallback shader never declared `illuminance`, so the fxc CTAB of the
+// substituted pixel program had no such variable and GetVariableHandleByName failed.
 //
-// the X360 programs' CTABs and the technique's constant lists:
+// This file is the real shader, decoded instruction-for-instruction from the two X360
+// ShaderProgramBuffer resources the technique imports (VS 0xDFF4FAE8, PS 0x45ADE07A)
+// with BP-Decomp_Workflow/tools/assets/shaders/xenos.py + ctab.py (the decoder validated against the
+// SHADERS.BNDL / SHADERS_PC.BNDL oracle pair, see xenos.py).  Constant surface, from
+// the X360 programs' own CTABs and the technique's constant lists:
 //   VS  world (per-object)   ViewProjectionModified, ScattCoeffs, ViewPosition (global)
 //   PS  FogColourPlusWhiteLevel (global)   materialDiffuse, illuminance (internal;
-//       defaults are {1,1,1,1} and 1.0) DiffuseTextureSampler (s0)
+//       X360 CTAB defaults {1,1,1,1} and 1.0)   DiffuseTextureSampler (s0)
 //
-// original microcode:
+// X360 microcode, annotated (Xenos slot : op):
 //   VS  4/5 vfetch position -> r2.xyz, texcoord -> r0.yz
 //        7-9  r1.xyz = pos.z*world[2] + world[3] + pos.y*world[1] + pos.x*world[0]
 //       10-13 hpos.x = dot(VPM[0], r1) ; .y = dot(VPM[1], r1) ; z' = dot(VPM[2], r1)
@@ -25,6 +36,9 @@
 //        7    r2.xyz = FogColour.rgb - r1.rgb ; r0.x = fog * ps  (muls_prev, ps = fog*tex.g)
 //        8    oC0.rgb = r1.rgb + r0.x * r2.rgb ; oC0.a = ps       (retain_prev)
 //
+// MATRIX PACKING: compiled with /Zpr (row-major) like every SHADERS.BNDL program -- see
+// compile_entry() in convert_shaders_bundle.py; the engine uploads logical ROWS.
+// Self-contained on purpose: it must compile without the TUB Include/ tree.
 
 // ---- per-object (vertex) --------------------------------------------------
 float4x4 world;
