@@ -110,7 +110,13 @@ float4 PS_Main( vertexOutput IN ) : COLOR
 #endif
     float3 lDirectLightColour   = float3( KeyLightColour );
     float3 lIndirectLightColour = float3( IN.IndirectColourAndKey.xyz );
+#ifdef D_ARTIST_WORLD_LIGHT_BLEND
+    // ARTIST Default PS 5F41C551: instructions 13/21 subtract indirect from
+    // key, then blend that difference into indirect using the direct factor.
+    float3 lLightColour         = lerp( lIndirectLightColour, lDirectLightColour, lDirectLightFactor ) * float3(materialDiffuse.xyz);
+#else
     float3 lLightColour         = ( lIndirectLightColour + lDirectLightColour * lDirectLightFactor ) * float3(materialDiffuse.xyz);
+#endif
     float3 lFinalColour         = (diffuseTexture * lLightColour);
     lFinalColour = lerp( lFinalColour.rgb, float3(FogColourPlusWhiteLevel.rgb), float(IN.texCoordDiffuseAndFog.z) );
 #ifdef D_MRT
