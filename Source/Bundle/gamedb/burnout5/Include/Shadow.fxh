@@ -344,6 +344,13 @@ CalcShadowFactor3CSM(
     float3 lLightSpacePos1or2   = ( lLightSpacePosPacked0.w < ShadowMap_Constants.y ? lLightSpacePos1 : lLightSpacePos2 );
     float3 tc3                  = ( lLightSpacePosPacked0.w < ShadowMap_Constants.x ? lLightSpacePos0 : lLightSpacePos1or2 );
     float3 metaMapTexCoord      = tc3;
+#ifdef SHADOW_APPLY_Z_BIAS
+    // The console double-sided and Sign pixel shaders pull the compare depth toward the
+    // light before the PCF taps (Diffuse_Opaque_Doublesided PS: z - ShadowMap_Constants2.z *
+    // 0.0005). A double-sided caster keeps its front faces in the map, so without this the
+    // surface shadows itself in texel-row stripes.
+    metaMapTexCoord.z          -= ShadowMap_Constants2.z * SHADOW_Z_BIAS_VALUE;
+#endif
 #ifdef D_SOFT_SHADOWS
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord, lLightSpacePosPacked0.w );
 #else
