@@ -17,6 +17,21 @@ float4x4    ViewProjectionModified
 >;
 #endif // USE_SHARED_GLOBALS
 
+#ifdef D_PC_REFLECTION_SHADOW_DEPTH
+// Native D3D9 input: cascade depth comes from the main camera that fitted the
+// shadow atlas. Reflection face clip.w belongs to a different camera.
+float4 ShadowMap_ViewDepthPC : register(c255);
+#endif
+
+float GetShadowReceiverDepthPC(float3 WorldSpacePosition, float faceDepth)
+{
+#ifdef D_PC_REFLECTION_SHADOW_DEPTH
+ return dot(float4(WorldSpacePosition, 1.0), ShadowMap_ViewDepthPC);
+#else
+ return faceDepth;
+#endif
+}
+
 float4 TransformWorldToProjection(float3 WorldSpacePosition)
 {
  float4 hPosition;
@@ -29,7 +44,8 @@ float4 TransformWorldToProjection(float3 WorldSpacePosition)
 
 float GetViewSpaceDepthFromWorldPosition(float3 WorldSpacePosition)
 {
- return dot( float4(WorldSpacePosition, 1.0), ViewProjectionModified[2]);
+ return GetShadowReceiverDepthPC(WorldSpacePosition,
+     dot(float4(WorldSpacePosition, 1.0), ViewProjectionModified[2]));
 }
 
 // Post-perspective [0,1] depth-buffer value for a world position, using the SAME projection

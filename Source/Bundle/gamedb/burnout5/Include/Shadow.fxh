@@ -205,6 +205,7 @@ GetShadowMapPositions2CSMSelect(
     out float4 texCoord0,
     out float4 texCoord1 )
 {
+    eyeZ = GetShadowReceiverDepthPC(positionWorld, eyeZ);
     float3 position0 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[ShadowMap_ObjectCsmSelect.x] ).xyz;
     float3 position1 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[ShadowMap_ObjectCsmSelect.y] ).xyz;
     texCoord0 = float4( position0, eyeZ );
@@ -219,6 +220,7 @@ GetShadowMapPositions2CSMSelectVS(
     out float4 texCoord0,
     out float4 texCoord1 )
 {
+    eyeZ = GetShadowReceiverDepthPC(positionWorld, eyeZ);
     int     firstCsmIndex  = ( objectDistance < ShadowMap_Constants2.x ) ? 0 : 1;
     float   distanceThresh = ( objectDistance < ShadowMap_Constants2.x ) ? ShadowMap_Constants.x : ShadowMap_Constants.y;
     float3 position0 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[firstCsmIndex] ).xyz;
@@ -234,6 +236,7 @@ GetShadowMapPositions3CSM(
     out float4 texCoord0,
     out float4 texCoord1 )
 {
+    eyeZ = GetShadowReceiverDepthPC(positionWorld, eyeZ);
 #if defined(D_PLATFORM_BPR) && !defined(SHADOW_X360_ROADS_ACTIVE)
     // BPR does the cascade transform + PCF in the pixel shader (matches the
     // Remastered Specular_1Bit), so just carry world position + eyeZ.
@@ -269,6 +272,7 @@ GetShadowMapPositions2CSM(
     out float4 texCoord0,
     out float4 texCoord1 )
 {
+    eyeZ = GetShadowReceiverDepthPC(positionWorld, eyeZ);
     float3 position0 = mul( float4( positionWorld,1), ShadowMap_WorldToLight[0] ).xyz;
     float3 position1 = mul( float4( positionWorld,1), ShadowMap_WorldToLight[1] ).xyz;
     texCoord0 = float4( position0, eyeZ );
@@ -281,6 +285,7 @@ GetShadowMapPositions1CSM(
     in float eyeZ,
     out float4 texCoord0 )
 {
+    eyeZ = GetShadowReceiverDepthPC(positionWorld, eyeZ);
     float3 position0 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[0] ).xyz;
     texCoord0 = float4( position0, eyeZ );
 }
