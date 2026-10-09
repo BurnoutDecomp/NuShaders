@@ -196,7 +196,10 @@ float4 PS_Main( vertexOutput IN, float lfFace : VFACE ) : COLOR
 #endif
     float3 lDirectLightColour   = float3( KeyLightColour );
     float3 lIndirectLightColour = float3( IN.IndirectColourAndKey.xyz );
-    float3 lLightColour         = max( illumTexture, ( lIndirectLightColour + lDirectLightColour * lDirectLightFactor ) ) * float3(materialDiffuse.xyz);
+    // ARTIST PS 10AEB540, instructions 20/32/33: interpolate irradiance to
+    // KeyLightColour. Adding the full key light double-counts the irradiance
+    // contribution and can hide the authored neon blink in daylight.
+    float3 lLightColour         = max( illumTexture, lerp( lIndirectLightColour, lDirectLightColour, lDirectLightFactor ) ) * float3(materialDiffuse.xyz);
     float3 lFinalColour         = (diffuseTexture.rgb * lLightColour);
     lFinalColour = lerp( lFinalColour, float3(FogColourPlusWhiteLevel.rgb), float(IN.texCoordDiffuseAndFog.z) );
 #ifdef D_MRT
