@@ -26,7 +26,11 @@ float4 ShadowMap_ViewDepthPC : register(c255);
 float GetShadowReceiverDepthPC(float3 WorldSpacePosition, float faceDepth)
 {
 #ifdef D_PC_REFLECTION_SHADOW_DEPTH
- return dot(float4(WorldSpacePosition, 1.0), ShadowMap_ViewDepthPC);
+ // Older decomp executables do not publish this optional input. Preserve their
+ // original receiver path until the matching native backend supplies a plane.
+ if (any(ShadowMap_ViewDepthPC.xyz != 0.0))
+  return dot(float4(WorldSpacePosition, 1.0), ShadowMap_ViewDepthPC);
+ return faceDepth;
 #else
  return faceDepth;
 #endif
