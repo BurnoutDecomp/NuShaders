@@ -37,6 +37,12 @@ float4 ShadowMap_ObjectCsmSelect
 >;
 #endif // USE_SHARED_GLOBALS
 
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+// Optional native SM3 pixel input: reflection flag and half an atlas texel in
+// U/V. Zero retains the original receiver path on older native executables.
+float4 ShadowMap_ReflectionPC : register(c223);
+#endif
+
 #ifdef D_PLATFORM_BPR
 // SM5/DX11: hardware comparison sampler (matches the Remastered binding: t15 + s15 comparison)
 Texture2D              shadowMapSamplerHighDetailTexture : register(t15);
@@ -198,6 +204,64 @@ float CalcOrthoShadowFactorBySampler(
 }
 #endif // D_PLATFORM_BPR  (CalcOrthoShadowFactorBySampler)
 
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+bool ReflectionShadowPositionValidPC(float3 position, float cascade)
+{
+    float2 lower = float2(ShadowMap_ReflectionPC.y, cascade / 3.0 + ShadowMap_ReflectionPC.z);
+    float2 upper = float2(1.0 - ShadowMap_ReflectionPC.y, (cascade + 1.0) / 3.0 - ShadowMap_ReflectionPC.z);
+    return all(position.xy >= lower) && all(position.xy <= upper)
+        && position.z >= 0.0 && position.z <= 1.0;
+}
+
+void SelectReflectionShadow3PC(float3 position0, float3 position1, float3 position2,
+                              inout float3 position, inout float cascade)
+{
+    if (ShadowMap_ReflectionPC.x > 0.0)
+    {
+        if (cascade < 1.0 && !ReflectionShadowPositionValidPC(position, cascade))
+        {
+            position = position1;
+            cascade = 1.0;
+        }
+        if (cascade < 2.0 && !ReflectionShadowPositionValidPC(position, cascade))
+        {
+            position = position2;
+            cascade = 2.0;
+        }
+    }
+}
+
+void SelectReflectionShadow2PC(float3 position1, float firstCascade,
+                              inout float3 position, inout float cascade)
+{
+    if (ShadowMap_ReflectionPC.x > 0.0 && cascade == firstCascade
+        && !ReflectionShadowPositionValidPC(position, cascade))
+    {
+        position = position1;
+        cascade = firstCascade + 1.0;
+    }
+}
+
+float CalcReflectionShadowFactorPC(float3 position, float cascade, float eyeZ)
+{
+    bool valid = ReflectionShadowPositionValidPC(position, cascade);
+    if (ShadowMap_ReflectionPC.x > 0.0)
+    {
+        // Keep the hardware PCF footprint in this tile even when the sample's
+        // result is discarded. Sampler CLAMP alone only bounds the whole atlas.
+        float2 lower = float2(ShadowMap_ReflectionPC.y, cascade / 3.0 + ShadowMap_ReflectionPC.z);
+        float2 upper = float2(1.0 - ShadowMap_ReflectionPC.y, (cascade + 1.0) / 3.0 - ShadowMap_ReflectionPC.z);
+        position.xy = clamp(position.xy, lower, upper);
+    }
+#ifdef D_SOFT_SHADOWS
+    float factor = CalcOrthoShadowFactorBySampler(shadowMapSamplerHighDetail, position, eyeZ);
+#else
+    float factor = CalcOrthoShadowFactorBySampler(shadowMapSamplerHighDetail, position);
+#endif
+    return (ShadowMap_ReflectionPC.x > 0.0 && !valid) ? 1.0 : factor;
+}
+#endif
+
 void
 GetShadowMapPositions2CSMSelect(
     in float3 positionWorld,
@@ -210,6 +274,11 @@ GetShadowMapPositions2CSMSelect(
     float3 position1 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[ShadowMap_ObjectCsmSelect.y] ).xyz;
     texCoord0 = float4( position0, eyeZ );
     texCoord1 = float4( position1, ShadowMap_ObjectCsmSelect.z );
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    // Preserve the pair's first cascade in the sign of its positive split.
+    // The matched pixel program uses the absolute split for the original test.
+    texCoord1.w *= (ShadowMap_ObjectCsmSelect.x < 0.5) ? 1.0 : -1.0;
+#endif
 }
 
 void
@@ -227,6 +296,9 @@ GetShadowMapPositions2CSMSelectVS(
     float3 position1 = mul( float4( positionWorld,1 ), ShadowMap_WorldToLight[firstCsmIndex+1] ).xyz;
     texCoord0 = float4( position0, eyeZ );
     texCoord1 = float4( position1, distanceThresh );
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    texCoord1.w *= (firstCsmIndex == 0) ? 1.0 : -1.0;
+#endif
 }
 
 void
@@ -349,6 +421,11 @@ CalcShadowFactor3CSM(
     float3 lLightSpacePos1or2   = ( lLightSpacePosPacked0.w < ShadowMap_Constants.y ? lLightSpacePos1 : lLightSpacePos2 );
     float3 tc3                  = ( lLightSpacePosPacked0.w < ShadowMap_Constants.x ? lLightSpacePos0 : lLightSpacePos1or2 );
     float3 metaMapTexCoord      = tc3;
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float cascade = (lLightSpacePosPacked0.w < ShadowMap_Constants.x) ? 0.0
+                  : (lLightSpacePosPacked0.w < ShadowMap_Constants.y) ? 1.0 : 2.0;
+    SelectReflectionShadow3PC(lLightSpacePos0, lLightSpacePos1, lLightSpacePos2, metaMapTexCoord, cascade);
+#endif
 #ifdef SHADOW_APPLY_Z_BIAS
     // The console double-sided and Sign pixel shaders pull the compare depth toward the
     // light before the PCF taps (Diffuse_Opaque_Doublesided PS: z - ShadowMap_Constants2.z *
@@ -356,7 +433,9 @@ CalcShadowFactor3CSM(
     // surface shadows itself in texel-row stripes.
     metaMapTexCoord.z          -= ShadowMap_Constants2.z * SHADOW_Z_BIAS_VALUE;
 #endif
-#ifdef D_SOFT_SHADOWS
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float factor = CalcReflectionShadowFactorPC(metaMapTexCoord, cascade, lLightSpacePosPacked0.w);
+#elif defined(D_SOFT_SHADOWS)
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord, lLightSpacePosPacked0.w );
 #else
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord );
@@ -391,9 +470,11 @@ CalcShadowFactor3CSM(
 #define D_ROAD_X360_SHADOW_TEXELS float2( 640.0, 960.0 )
 #endif
 
-float CalcShadowCompareTap_X360Aniso( float2 uv, float z )
+float CalcShadowCompareTap_X360Aniso( float2 uv, float z, float cascade )
 {
-#ifdef D_PLATFORM_BPR
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    return CalcReflectionShadowFactorPC(float3(uv, z), cascade, 0.0);
+#elif defined(D_PLATFORM_BPR)
     return shadowMapSamplerHighDetailTexture.SampleCmpLevelZero( shadowMapSamplerHighDetail, uv, z );
 #else
     return tex2Dproj( shadowMapSamplerHighDetail, float4( uv, z, 1.0 ) ).r;
@@ -412,6 +493,14 @@ CalcShadowFactor3CSM_X360_Aniso(
     float2 tc12 = ( sel.x > 0.0 ) ? lLightSpacePosPacked1.xy : lLightSpacePosPacked1.zw;
     float2 tc   = ( sel.y > 0.0 ) ? lLightSpacePosPacked0.xy : tc12;
     float  tcz  = lLightSpacePosPacked0.z;   // always cascade 0's depth
+    float cascade = (sel.y > 0.0) ? 0.0 : (sel.x > 0.0) ? 1.0 : 2.0;
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float3 position = float3(tc, tcz);
+    SelectReflectionShadow3PC(lLightSpacePosPacked0.xyz,
+        float3(lLightSpacePosPacked1.xy, tcz), float3(lLightSpacePosPacked1.zw, tcz), position, cascade);
+    tc = position.xy;
+    sel = float2((cascade < 2.0) ? 1.0 : 0.0, (cascade < 1.0) ? 1.0 : 0.0);
+#endif
 
     // collapse the kernel on quads that straddle a cascade seam
     float  seam   = abs( ddx( sel.x ) ) + abs( ddy( sel.x ) )
@@ -424,8 +513,8 @@ CalcShadowFactor3CSM_X360_Aniso(
         dir = 0.75 / D_ROAD_X360_SHADOW_TEXELS;
 
     float2 off    = spread * dir;
-    float  factor = 0.5 * ( CalcShadowCompareTap_X360Aniso( tc + off, tcz )
-                          + CalcShadowCompareTap_X360Aniso( tc - off, tcz ) );
+    float  factor = 0.5 * ( CalcShadowCompareTap_X360Aniso( tc + off, tcz, cascade )
+                          + CalcShadowCompareTap_X360Aniso( tc - off, tcz, cascade ) );
 
     float cutoffFactor = saturate( ( NDotL - 0.25 ) * 20.0 );
     float fadeValue    = saturate( (float)ShadowMap_Constants.w - eyeZ * (float)ShadowMap_Constants2.w );
@@ -463,7 +552,11 @@ CalcShadowFactor2CSM(
     float3 lLightSpacePos1 = lLightSpacePosPacked1.xyz;
     float3 lLightSpacePos0or1   = ( lLightSpacePosPacked0.w < ShadowMap_Constants.x ? lLightSpacePos0 : lLightSpacePos1 );
     float3 metaMapTexCoord      = lLightSpacePos0or1;
-#ifdef D_SOFT_SHADOWS
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float cascade = (lLightSpacePosPacked0.w < ShadowMap_Constants.x) ? 0.0 : 1.0;
+    SelectReflectionShadow2PC(lLightSpacePos1, 0.0, metaMapTexCoord, cascade);
+    float factor = CalcReflectionShadowFactorPC(metaMapTexCoord, cascade, lLightSpacePosPacked0.w);
+#elif defined(D_SOFT_SHADOWS)
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord, lLightSpacePosPacked0.w );
 #else
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord );
@@ -481,9 +574,19 @@ CalcShadowFactor2CSMSelect(
 {
     float3 lLightSpacePos0 = lLightSpacePosPacked0.xyz;
     float3 lLightSpacePos1 = lLightSpacePosPacked1.xyz;
-    float3 lLightSpacePos0or1   = ( lLightSpacePosPacked0.w < lLightSpacePosPacked1.w ? lLightSpacePos0 : lLightSpacePos1 );
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float split = abs(lLightSpacePosPacked1.w);
+#else
+    float split = lLightSpacePosPacked1.w;
+#endif
+    float3 lLightSpacePos0or1   = ( lLightSpacePosPacked0.w < split ? lLightSpacePos0 : lLightSpacePos1 );
     float3 metaMapTexCoord      = lLightSpacePos0or1;
-#ifdef D_SOFT_SHADOWS
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float firstCascade = (lLightSpacePosPacked1.w < 0.0) ? 1.0 : 0.0;
+    float cascade = firstCascade + ((lLightSpacePosPacked0.w < split) ? 0.0 : 1.0);
+    SelectReflectionShadow2PC(lLightSpacePos1, firstCascade, metaMapTexCoord, cascade);
+    float factor = CalcReflectionShadowFactorPC(metaMapTexCoord, cascade, lLightSpacePosPacked0.w);
+#elif defined(D_SOFT_SHADOWS)
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord, lLightSpacePosPacked0.w );
 #else
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord );
@@ -499,7 +602,9 @@ CalcShadowFactor1CSM(
     in float     NDotL )
 {
     float3 lLightSpacePos0 = lLightSpacePosPacked0.xyz;
-#ifdef D_SOFT_SHADOWS
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float factor = CalcReflectionShadowFactorPC(lLightSpacePos0, 0.0, 0.0);
+#elif defined(D_SOFT_SHADOWS)
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, lLightSpacePos0, 0.0 );
 #else
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, lLightSpacePos0 );
@@ -519,13 +624,25 @@ CalcShadowFactorCSM_Vehicle_Damaged_2CSM_Select
 {
     float3 lLightSpacePos0 = lLightSpacePosPacked0.xyz;
     float3 lLightSpacePos1 = lLightSpacePosPacked1.xyz;
-    float3 lLightSpacePos0or1 = ( lLightSpacePosPacked0.w < lLightSpacePosPacked1.w ? lLightSpacePos0 : lLightSpacePos1 );
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float split = abs(lLightSpacePosPacked1.w);
+#else
+    float split = lLightSpacePosPacked1.w;
+#endif
+    float3 lLightSpacePos0or1 = ( lLightSpacePosPacked0.w < split ? lLightSpacePos0 : lLightSpacePos1 );
     float3 metaMapTexCoord    = lLightSpacePos0or1;
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float firstCascade = (lLightSpacePosPacked1.w < 0.0) ? 1.0 : 0.0;
+    float cascade = firstCascade + ((lLightSpacePosPacked0.w < split) ? 0.0 : 1.0);
+    SelectReflectionShadow2PC(lLightSpacePos1, firstCascade, metaMapTexCoord, cascade);
+#endif
     float damageBiasModifier = saturate( damage - 0.05 ) * 0.002;
     float biasFactor = 1.0 - NDotL * NDotL;
     float nearBias   = min( -0.00019 * biasFactor, -0.000051 ) - damageBiasModifier;
     metaMapTexCoord.z+=nearBias * ShadowMap_Constants2.z;
-#ifdef D_SOFT_SHADOWS
+#ifdef D_PC_REFLECTION_SHADOW_BOUNDS
+    float factor = CalcReflectionShadowFactorPC(metaMapTexCoord, cascade, lLightSpacePosPacked0.w);
+#elif defined(D_SOFT_SHADOWS)
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord, lLightSpacePosPacked0.w );
 #else
     float factor = CalcOrthoShadowFactorBySampler( shadowMapSamplerHighDetail, metaMapTexCoord );
